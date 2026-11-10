@@ -10,9 +10,11 @@
 
 لا تُقبل مساهمة أُنتجت بنموذج أضعف من ذلك، ولا عمل بشري مباشر في الترجمة أو الصوت أو الرسم.
 
+تتبّع التقدّم في [المعالم](https://github.com/DiNaSoR/GTA6AR/milestones) و[القضايا](https://github.com/DiNaSoR/GTA6AR/issues)، وفي جدول التقدّم بملف README.
+
 ## كيف تساهم
 
-1. افتح **Issue** تقترح فيها عملًا أو تطلب تولّي مهمة (مشهد، أو ملف نصي، أو صورة، أو مقطع صوتي).
+1. افتح **Issue** من [قوالب القضايا](https://github.com/DiNaSoR/GTA6AR/issues/new/choose) تقترح فيها عملًا أو تطلب تولّي مهمة (مشهد، أو ملف نصي، أو صورة، أو مقطع صوتي)، واملأ اسم النموذج وإصداره.
 2. بعد الاتفاق، أنشئ نسخة (Fork) أو فرعًا، وقدّم التعديل عبر **Pull Request**.
 3. اذكر في طلب الدمج ما الذي تغيّر، والنموذج المستخدم وإصداره.
 
@@ -36,9 +38,11 @@ All localization, dubbing, writing, and images in this project are produced enti
 
 Contributions made with weaker models, or with direct human translation, voice, or art, are not accepted.
 
+Progress is tracked through [milestones](https://github.com/DiNaSoR/GTA6AR/milestones) and [issues](https://github.com/DiNaSoR/GTA6AR/issues), and in the README progress table.
+
 ## How to help
 
-1. Open an **Issue** to propose work or claim a task (a scene, text file, image, or voice line).
+1. Open an **Issue** from the [issue templates](https://github.com/DiNaSoR/GTA6AR/issues/new/choose) to propose work or claim a task (a scene, text file, image, or voice line), and fill in the model name and version.
 2. After agreement, use a fork or branch and submit a **Pull Request**.
 3. In the PR, describe what changed and name the model and version used.
 

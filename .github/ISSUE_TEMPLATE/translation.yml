@@ -1,0 +1,57 @@
+name: مهمة ترجمة / Translation task
+description: اقترح أو تولَّ مهمة ترجمة بالذكاء الاصطناعي (Gemini 3.8 Flash أو أقوى).
+title: "[ترجمة] "
+labels: ["area:translation", "status:todo", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        كل الترجمة في هذا المشروع تُنجز بالذكاء الاصطناعي بالكامل، بـ **Gemini 3.8 Flash أو أقوى**.
+        يُمنع إرفاق نصوص اللعبة الأصلية أو ملفاتها.
+  - type: textarea
+    id: summary
+    attributes:
+      label: وصف المهمة / Task
+      description: اشرح المهمة بالعربية، وأضف سطرًا إنجليزيًا موجزًا.
+      placeholder: |
+        تخطيط دفعة تعريب لقوائم الإعدادات…
+        English: Plan a translation batch for settings menus…
+    validations:
+      required: true
+  - type: input
+    id: model_name
+    attributes:
+      label: اسم نموذج الذكاء الاصطناعي / AI model name
+      description: الحد الأدنى المعتمد للترجمة هو Gemini 3.8 Flash. اكتب اسم النموذج الذي ستستخدمه، أو «لم يُحدد بعد» إن كانت المهمة تخطيطًا فقط.
+      placeholder: Gemini 3.8 Flash
+    validations:
+      required: true
+  - type: input
+    id: model_version
+    attributes:
+      label: إصدار النموذج / Model version
+      description: رقم الإصدار أو التاريخ إن عُرف. إن لم يُحدد بعد فاكتب «لم يُحدد بعد».
+      placeholder: 3.8
+    validations:
+      required: true
+  - type: dropdown
+    id: batch
+    attributes:
+      label: المجال الفرعي / Batch
+      options:
+        - واجهة وقوائم / UI and menus
+        - ترجمات فرعية وحوار / Subtitles and dialogue
+        - نصوص المهمات والقصص / Missions and story
+        - مسرد أو أسلوب / Glossary or style
+        - أخرى / Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: التزم بهذه القواعد / Confirm
+      options:
+        - label: لن أرفع نصوص اللعبة الأصلية أو ملفاتها أو أصولها إلى هذه القضية أو إلى المستودع.
+          required: true
+        - label: سأستخدم Gemini 3.8 Flash أو أقوى، وسأذكر النموذج وإصداره في طلب الدمج.
+          required: true

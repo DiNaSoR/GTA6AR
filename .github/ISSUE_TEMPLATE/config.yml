@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: دليل المساهمة / Contributing guide
+    url: https://github.com/DiNaSoR/GTA6AR/blob/main/CONTRIBUTING.md
+    about: اقرأ قواعد المشروع والنماذج المعتمدة قبل فتح قضية.

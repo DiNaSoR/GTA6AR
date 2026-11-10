@@ -1,0 +1,54 @@
+name: مهمة دبلجة / Voice task
+description: اقترح أو تولَّ مهمة دبلجة صوتية بالذكاء الاصطناعي (ElevenLabs v4 أو أقوى).
+title: "[دبلجة] "
+labels: ["area:voice", "status:todo", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        كل الدبلجة في هذا المشروع تُنجز بالذكاء الاصطناعي بالكامل، بـ **ElevenLabs v4 أو أقوى**.
+        يُمنع إرفاق أصول صوتية مستخرجة من اللعبة.
+  - type: textarea
+    id: summary
+    attributes:
+      label: وصف المهمة / Task
+      description: اشرح المهمة بالعربية، وأضف سطرًا إنجليزيًا موجزًا.
+    validations:
+      required: true
+  - type: input
+    id: model_name
+    attributes:
+      label: اسم نموذج الذكاء الاصطناعي / AI model name
+      description: الحد الأدنى المعتمد للصوت هو ElevenLabs v4. اكتب اسم النموذج، أو «لم يُحدد بعد» إن كانت المهمة تخطيطًا فقط.
+      placeholder: ElevenLabs v4
+    validations:
+      required: true
+  - type: input
+    id: model_version
+    attributes:
+      label: إصدار النموذج / Model version
+      description: رقم الإصدار أو اسمه. إن لم يُحدد بعد فاكتب «لم يُحدد بعد».
+      placeholder: v4
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: نوع العمل / Kind
+      options:
+        - خط إنتاج / Pipeline
+        - مواصفات صوت / Voice profile
+        - مواءمة توقيت / Timing alignment
+        - مراجعة نطق / Pronunciation QA
+        - أخرى / Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: التزم بهذه القواعد / Confirm
+      options:
+        - label: لن أرفع أصولًا صوتية مستخرجة من اللعبة إلى هذه القضية أو إلى المستودع.
+          required: true
+        - label: سأستخدم ElevenLabs v4 أو أقوى، وسأذكر النموذج وإصداره في طلب الدمج.
+          required: true

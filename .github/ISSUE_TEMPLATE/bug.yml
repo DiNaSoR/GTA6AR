@@ -1,0 +1,52 @@
+name: بلاغ خلل / Bug report
+description: أبلغ عن خلل في الأدوات أو الترقيع أو خط الإنتاج.
+title: "[خلل] "
+labels: ["bug", "status:todo"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        صف الخلل بوضوح، ولا ترفق ملفات اللعبة أو نصوصها أو أصولها.
+        إذا كان الخلل مرتبطًا بمخرجات الذكاء الاصطناعي، اذكر النموذج وإصداره.
+  - type: textarea
+    id: summary
+    attributes:
+      label: وصف الخلل / What happened
+      description: بالعربية، مع سطر إنجليزي موجز.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: خطوات إعادة الإظهار / Steps to reproduce
+      description: اذكر الخطوات من غير رفع ملفات اللعبة. إن تعذر الإظهار فاذكر ذلك.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: السلوك المتوقع / Expected behavior
+    validations:
+      required: true
+  - type: input
+    id: model_name
+    attributes:
+      label: اسم نموذج الذكاء الاصطناعي / AI model name
+      description: إن لم يكن الخلل مرتبطًا بنموذج فاكتب «لا ينطبق».
+      placeholder: Gemini 3.8 Flash / ElevenLabs v4 / Sunburn / لا ينطبق
+    validations:
+      required: true
+  - type: input
+    id: model_version
+    attributes:
+      label: إصدار النموذج / Model version
+      description: إن لم يكن الخلل مرتبطًا بنموذج فاكتب «لا ينطبق».
+    validations:
+      required: true
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: التزم بهذه القواعد / Confirm
+      options:
+        - label: لن أرفق ملفات اللعبة أو نصوصها الأصلية أو أصولها في هذا البلاغ.
+          required: true

@@ -1,0 +1,54 @@
+name: مهمة صور / Image task
+description: اقترح أو تولَّ مهمة صور أو رسوم بالذكاء الاصطناعي (Sunburn من OpenAI أو أفضل).
+title: "[صور] "
+labels: ["area:images", "status:todo", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        كل الصور والرسوم في هذا المشروع تُنجز بالذكاء الاصطناعي بالكامل، بـ **Sunburn من OpenAI أو أفضل**.
+        يُمنع إرفاق أنسجة أو أصول مستخرجة من اللعبة.
+  - type: textarea
+    id: summary
+    attributes:
+      label: وصف المهمة / Task
+      description: اشرح المهمة بالعربية، وأضف سطرًا إنجليزيًا موجزًا.
+    validations:
+      required: true
+  - type: input
+    id: model_name
+    attributes:
+      label: اسم نموذج الذكاء الاصطناعي / AI model name
+      description: الحد الأدنى المعتمد للصور هو Sunburn من OpenAI. اكتب اسم النموذج، أو «لم يُحدد بعد» إن كانت المهمة تخطيطًا فقط.
+      placeholder: Sunburn (OpenAI)
+    validations:
+      required: true
+  - type: input
+    id: model_version
+    attributes:
+      label: إصدار النموذج / Model version
+      description: رقم الإصدار أو اسمه. إن لم يُحدد بعد فاكتب «لم يُحدد بعد».
+      placeholder: Sunburn
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: نوع العمل / Kind
+      options:
+        - خط إنتاج / Pipeline
+        - لافتات أو لوحات / Signs or artwork
+        - عناصر واجهة / HUD or menus
+        - معايير النص داخل الصورة / In-image typography
+        - أخرى / Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: التزم بهذه القواعد / Confirm
+      options:
+        - label: لن أرفع أنسجة أو أصولًا مستخرجة من اللعبة إلى هذه القضية أو إلى المستودع.
+          required: true
+        - label: سأستخدم Sunburn من OpenAI أو أفضل، وسأذكر النموذج وإصداره في طلب الدمج.
+          required: true
