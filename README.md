@@ -8,15 +8,16 @@
 
 ## ملخص التقدّم
 
-| المجال | التقدّم |
-|---|---|
-| الترجمة | `░░░░░░░░░░` 0% |
-| الدبلجة | `░░░░░░░░░░` 0% |
-| الصور | `░░░░░░░░░░` 0% |
-| الخطوط | `░░░░░░░░░░` 0% |
-| الأدوات | `░░░░░░░░░░` 0% |
-| الجودة | `░░░░░░░░░░` 0% |
-| **الكلي** | `░░░░░░░░░░` **0%** |
+<table width="100%">
+<tr><th width="20%">المجال</th><th width="65%">التقدّم</th><th width="15%">النسبة</th></tr>
+<tr><td>الترجمة <sub>Translation</sub></td><td><code>░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░</code></td><td align="center">0%</td></tr>
+<tr><td>الدبلجة <sub>Voice</sub></td><td><code>░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░</code></td><td align="center">0%</td></tr>
+<tr><td>الصور <sub>Images</sub></td><td><code>░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░</code></td><td align="center">0%</td></tr>
+<tr><td>الخطوط <sub>Fonts</sub></td><td><code>░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░</code></td><td align="center">0%</td></tr>
+<tr><td>الأدوات <sub>Tools</sub></td><td><code>░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░</code></td><td align="center">0%</td></tr>
+<tr><td>الجودة <sub>QA</sub></td><td><code>░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░</code></td><td align="center">0%</td></tr>
+<tr><td><b>الكلي</b> <sub>Overall</sub></td><td><code>░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░</code></td><td align="center"><b>0%</b></td></tr>
+</table>
 
 التفاصيل في [المعالم](https://github.com/DiNaSoR/GTA6AR/milestones) و[القضايا](https://github.com/DiNaSoR/GTA6AR/issues).
 
