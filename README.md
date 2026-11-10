@@ -36,7 +36,7 @@
 
 ## القيادة
 
-يقود المشروع **(ص) بويوسف**: [x.com/sbalhatlani](https://x.com/sbalhatlani)
+يقود المشروع **(ص)**: [x.com/sbalhatlani](https://x.com/sbalhatlani)
 
 ## المشاركة
 
@@ -62,7 +62,7 @@
 
 **GTA6AR** is a community open-source Arabic localization of *Grand Theft Auto VI* (Rockstar Games / Take-Two Interactive, 19 Nov 2026): full text translation, Arabic voice dubbing, and in-game image localization, all produced entirely by AI with no human translation, voice acting, or art. We distribute patches and tools only — never game files. You need your own legal copy.
 
-Led by **(ص) بويوسف**: [x.com/sbalhatlani](https://x.com/sbalhatlani)
+Led by **(ص)**: [x.com/sbalhatlani](https://x.com/sbalhatlani)
 
 Anyone in the community can contribute by running the AI pipelines, building tools, and reporting bugs. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
