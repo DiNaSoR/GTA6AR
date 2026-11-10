@@ -7,12 +7,12 @@
       "nav.models": "النماذج",
       "nav.join": "المشاركة",
       "hero.eyebrow": "مشروع مجتمعي مفتوح المصدر",
-      "hero.title": "تعريب غراند ثيفت أوتو 6",
+      "hero.title": "تعريب جراند ثيفت أوتو 6",
       "hero.pitch": "تعريبٌ عربيٌّ فصيحٌ للنصوص والدبلجة والصور، يُنجَز بالكامل بالذكاء الاصطناعي، من غير عمل بشري في الترجمة أو الأداء أو الرسم.",
       "hero.meta": "صدور اللعبة في 19 نوفمبر 2026 · يقود المشروع (ص) بويوسف",
       "hero.repo": "المستودع على GitHub",
       "goal.title": "الهدف",
-      "goal.body": "أن نوفر تعريبًا عربيًا فصيحًا متكاملًا لغراند ثيفت أوتو 6، يشمل النصوص والدبلجة والصور، ويُنجز بالكامل بالذكاء الاصطناعي وفق النماذج المعتمدة، ثم ننشر ترقيعًا وأدواتٍ مجانيةً مفتوحة المصدر تبلغ الإصدار 1.0 بعد صدور اللعبة، من غير أن نوزّع أيًّا من ملفات اللعبة الأصلية. يلزم اللاعبَ امتلاكُ نسخة قانونية.",
+      "goal.body": "أن نوفر تعريبًا عربيًا فصيحًا متكاملًا لجراند ثيفت أوتو 6، يشمل النصوص والدبلجة والصور، ويُنجز بالكامل بالذكاء الاصطناعي وفق النماذج المعتمدة، ثم ننشر ترقيعًا وأدواتٍ مجانيةً مفتوحة المصدر تبلغ الإصدار 1.0 بعد صدور اللعبة، من غير أن نوزّع أيًّا من ملفات اللعبة الأصلية. يلزم اللاعبَ امتلاكُ نسخة قانونية.",
       "progress.title": "ملخص التقدّم",
       "progress.intro": "ما زال المشروع في مرحلة التخطيط، والنسب نقطة انطلاق قبل صدور اللعبة.",
       "progress.overall": "الكلي",
@@ -134,8 +134,17 @@
 
   function renderProgress() {
     const list = document.getElementById("progress-list");
-    const overall = Number(state.data.overall) || 0;
+    const overall = Math.max(0, Math.min(100, Number(state.data.overall) || 0));
     document.getElementById("overall-value").textContent = `${overall}%`;
+    const overallTrack = document.getElementById("overall-track");
+    overallTrack.setAttribute("aria-valuenow", String(overall));
+    overallTrack.setAttribute("aria-label", `${I18N[state.lang]["progress.overall"]} ${overall}%`);
+    const overallFill = document.getElementById("overall-fill");
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        overallFill.style.width = `${overall}%`;
+      });
+    });
     list.innerHTML = "";
     state.data.areas.forEach((area) => {
       const pct = Math.max(0, Math.min(100, Number(area.percent) || 0));
@@ -172,9 +181,12 @@
       const title = state.lang === "en" ? ms.en : ms.ar;
       const sub = state.lang === "en" ? ms.ar : ms.en;
       li.innerHTML = `
-        <span class="when"></span>
-        <a></a>
-        <span class="sub"></span>
+        <span class="node" aria-hidden="true"></span>
+        <div class="ms-card">
+          <a></a>
+          <span class="sub"></span>
+          <span class="when"></span>
+        </div>
       `;
       li.querySelector(".when").textContent = formatDate(ms.due);
       const a = li.querySelector("a");
@@ -204,5 +216,24 @@
     applyLang();
   });
 
+  function watchSections() {
+    if (!("IntersectionObserver" in window)) return;
+    const links = new Map();
+    document.querySelectorAll(".nav-links a[href^='#']").forEach((a) => {
+      links.set(a.getAttribute("href").slice(1), a);
+    });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        links.forEach((a, id) => a.classList.toggle("is-active", id === entry.target.id));
+      });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    links.forEach((_, id) => {
+      const section = document.getElementById(id);
+      if (section) observer.observe(section);
+    });
+  }
+
   loadProgress();
+  watchSections();
 })();
