@@ -11,6 +11,7 @@
 - تعريب نصوص اللعبة تعريبًا كاملًا.
 - دبلجة صوتية عربية.
 - تعريب الصور والرسوم داخل اللعبة.
+- إنجاز كل ذلك بالذكاء الاصطناعي بالكامل، دون ترجمة أو أداء صوتي أو رسم بشري.
 - مشروع مجتمعي مفتوح المصدر.
 - يقتصر التوزيع على الترقيعات والأدوات دون ملفات اللعبة، ويلزم اللاعبَ امتلاكُ نسخة أصلية.
 
@@ -20,22 +21,32 @@
 
 ## المشاركة
 
-المشاركة متاحة لكل أفراد المجتمع: المترجمين، والمؤدين الصوتيين، ومصممي الرسوم، والمبرمجين وصنّاع التعديلات، والمراجعين. تجد التفاصيل في [CONTRIBUTING.md](CONTRIBUTING.md).
+المشاركة متاحة لكل أفراد المجتمع، عبر تشغيل خطوط الإنتاج بالذكاء الاصطناعي، وتطوير الأدوات، والإبلاغ عن الأخطاء. تجد التفاصيل في [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## نماذج الذكاء الاصطناعي المعتمدة
+
+| المجال | الحد الأدنى للنموذج |
+|---|---|
+| الدبلجة والأداء الصوتي | ElevenLabs v4 أو أقوى |
+| الترجمة والنصوص | Gemini 3.8 Flash أو أقوى |
+| الصور والرسوم | Sunburn من OpenAI أو أفضل |
 
 ## تنويه
 
 هذا مشروع جماهيري غير رسمي، ولا صلة له بشركة Rockstar Games أو Take-Two Interactive، والعلامات التجارية ملكٌ لأصحابها.
 
-قد تُستخدم أدوات الذكاء الاصطناعي ضمن مراحل العمل.
+التعريب والدبلجة والكتابة والصور في هذا المشروع منتَجة كلها بالذكاء الاصطناعي.
 
 ---
 
 ## English
 
-**GTA6AR** is a community open-source Arabic localization of *Grand Theft Auto VI* (Rockstar Games / Take-Two Interactive, 19 Nov 2026): full text translation, Arabic voice dubbing, and in-game image localization. We distribute patches and tools only — never game files. You need your own legal copy.
+**GTA6AR** is a community open-source Arabic localization of *Grand Theft Auto VI* (Rockstar Games / Take-Two Interactive, 19 Nov 2026): full text translation, Arabic voice dubbing, and in-game image localization, all produced entirely by AI with no human translation, voice acting, or art. We distribute patches and tools only — never game files. You need your own legal copy.
 
 Led by **(ص) بويوسف**: [x.com/sbalhatlani](https://x.com/sbalhatlani)
 
-Anyone in the community can contribute (translators, voice actors, graphic designers, programmers/modders, reviewers). See [CONTRIBUTING.md](CONTRIBUTING.md).
+Anyone in the community can contribute by running the AI pipelines, building tools, and reporting bugs. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Unofficial fan project, not affiliated with Rockstar Games or Take-Two Interactive. Trademarks belong to their owners. AI tools may be used in the workflow.
+Minimum models: ElevenLabs v4 or stronger for voice, Gemini 3.8 Flash or stronger for translation, and OpenAI Sunburn or better for images.
+
+Unofficial fan project, not affiliated with Rockstar Games or Take-Two Interactive. Trademarks belong to their owners. All localization, dubbing, writing, and images are AI-generated.
