@@ -2,6 +2,8 @@
 
 ![جي تي أي 6 بالعربي](assets/header.png)
 
+ستُنشر [صفحة المشروع](https://dinasor.github.io/GTA6AR/) عند جعل المستودع عامًا.
+
 ## عن اللعبة
 
 **غراند ثيفت أوتو 6** (Grand Theft Auto VI) لعبةٌ من تطوير [Rockstar Games](https://www.rockstargames.com/) ونشر [Take-Two Interactive](https://www.take2games.com/)، ومن المقرر صدورها في 19 نوفمبر 2026.

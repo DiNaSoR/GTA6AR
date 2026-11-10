@@ -1,0 +1,62 @@
+{
+  "overall": 0,
+  "areas": [
+    {"id": "translation", "percent": 0, "ar": "الترجمة", "en": "Translation"},
+    {"id": "voice", "percent": 0, "ar": "الدبلجة", "en": "Voice"},
+    {"id": "images", "percent": 0, "ar": "الصور", "en": "Images"},
+    {"id": "fonts", "percent": 0, "ar": "الخطوط", "en": "Fonts"},
+    {"id": "tools", "percent": 0, "ar": "الأدوات", "en": "Tools"},
+    {"id": "qa", "percent": 0, "ar": "الجودة", "en": "QA"}
+  ],
+  "milestones": [
+    {
+      "number": 1,
+      "due": "2026-11-14",
+      "ar": "إعداد خطوط الإنتاج",
+      "en": "Setup & Pipeline",
+      "url": "https://github.com/DiNaSoR/GTA6AR/milestone/1"
+    },
+    {
+      "number": 2,
+      "due": "2026-11-18",
+      "ar": "استخراج النصوص والأدوات",
+      "en": "Text Extraction & Tools",
+      "url": "https://github.com/DiNaSoR/GTA6AR/milestone/2"
+    },
+    {
+      "number": 4,
+      "due": "2026-12-15",
+      "ar": "الخطوط العربية ودعم RTL",
+      "en": "Arabic Fonts & RTL",
+      "url": "https://github.com/DiNaSoR/GTA6AR/milestone/4"
+    },
+    {
+      "number": 3,
+      "due": "2026-12-31",
+      "ar": "الترجمة بالذكاء الاصطناعي",
+      "en": "AI Translation (UI, subtitles, missions)",
+      "url": "https://github.com/DiNaSoR/GTA6AR/milestone/3"
+    },
+    {
+      "number": 6,
+      "due": "2027-01-31",
+      "ar": "الصور والرسوم بالذكاء الاصطناعي",
+      "en": "AI Images/Textures",
+      "url": "https://github.com/DiNaSoR/GTA6AR/milestone/6"
+    },
+    {
+      "number": 5,
+      "due": "2027-02-28",
+      "ar": "الدبلجة الصوتية بالذكاء الاصطناعي",
+      "en": "AI Voice Dubbing",
+      "url": "https://github.com/DiNaSoR/GTA6AR/milestone/5"
+    },
+    {
+      "number": 7,
+      "due": "2027-03-31",
+      "ar": "المراجعة والإصدار 1.0",
+      "en": "QA & Release v1.0",
+      "url": "https://github.com/DiNaSoR/GTA6AR/milestone/7"
+    }
+  ]
+}
