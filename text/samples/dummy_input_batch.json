@@ -1,0 +1,42 @@
+{
+  "domain": "ui",
+  "batch_id": "sample-ui-menus-001",
+  "entries": [
+    {
+      "id": "DUMMY_UI_MAIN_START",
+      "source_en": "Start Game",
+      "context_category": "menu",
+      "max_chars": 20,
+      "max_lines": 1,
+      "placeholders": [],
+      "glossary_terms": ["term.start_game"]
+    },
+    {
+      "id": "DUMMY_UI_MAIN_SETTINGS",
+      "source_en": "Settings",
+      "context_category": "menu",
+      "max_chars": 20,
+      "max_lines": 1,
+      "placeholders": [],
+      "glossary_terms": ["term.settings"]
+    },
+    {
+      "id": "DUMMY_UI_PROMPT_SAVE",
+      "source_en": "Press ~INPUT_ACCEPT~ to Save Progress in slot {0}.",
+      "context_category": "hud",
+      "max_chars": 60,
+      "max_lines": 2,
+      "placeholders": ["~INPUT_ACCEPT~", "{0}"],
+      "glossary_terms": ["term.save_progress"]
+    },
+    {
+      "id": "DUMMY_MIS_OBJ_WAYPOINT",
+      "source_en": "Follow the Waypoint on the Map to reach the Safehouse.",
+      "context_category": "objective",
+      "max_chars": 65,
+      "max_lines": 2,
+      "placeholders": [],
+      "glossary_terms": ["term.waypoint", "term.map", "term.safehouse"]
+    }
+  ]
+}

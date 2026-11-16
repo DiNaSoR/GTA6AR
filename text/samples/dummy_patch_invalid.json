@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "domain": "ui",
+  "batch_id": "sample-ui-invalid-001",
+  "generated_at": "2026-11-16T18:00:00Z",
+  "generator": {
+    "model_name": "gemini-3.8-flash",
+    "model_version": "3.8",
+    "pipeline_version": "1.0.0",
+    "glossary_version": "1.0.0"
+  },
+  "entries": [
+    {
+      "id": "DUMMY_BAD_FORBIDDEN_TERM",
+      "ar": "افتح الضبط لتعديل الجرافيكس",
+      "context_category": "menu",
+      "max_chars": 40,
+      "max_lines": 1,
+      "placeholders": [],
+      "glossary_terms": ["term.settings", "term.graphics"]
+    },
+    {
+      "id": "DUMMY_BAD_MISSING_PLACEHOLDER",
+      "ar": "اضغط لحفظ التقدّم الآن.",
+      "context_category": "hud",
+      "max_chars": 15,
+      "max_lines": 1,
+      "placeholders": ["~INPUT_ACCEPT~", "{0}"],
+      "glossary_terms": ["term.save_progress"]
+    }
+  ]
+}

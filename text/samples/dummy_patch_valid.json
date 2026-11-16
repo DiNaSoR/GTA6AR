@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "domain": "ui",
+  "batch_id": "sample-ui-menus-001",
+  "generated_at": "2026-11-16T18:00:00Z",
+  "generator": {
+    "model_name": "gemini-3.8-flash",
+    "model_version": "3.8",
+    "pipeline_version": "1.0.0",
+    "glossary_version": "1.0.0"
+  },
+  "entries": [
+    {
+      "id": "DUMMY_UI_MAIN_START",
+      "source_hash": "8b76e8355622a4e24a846644f88721d39f419e25a0e229944d15f2269553e76a",
+      "ar": "بدء اللعبة",
+      "context_category": "menu",
+      "max_chars": 20,
+      "max_lines": 1,
+      "placeholders": [],
+      "glossary_terms": ["term.start_game"]
+    },
+    {
+      "id": "DUMMY_UI_MAIN_SETTINGS",
+      "source_hash": "f4f70727dc34561dfde1a3c529b6205c9c269274a348862c30c1a036c2182d38",
+      "ar": "الإعدادات",
+      "context_category": "menu",
+      "max_chars": 20,
+      "max_lines": 1,
+      "placeholders": [],
+      "glossary_terms": ["term.settings"]
+    },
+    {
+      "id": "DUMMY_UI_PROMPT_SAVE",
+      "source_hash": "2e635a0c4a0d542d4f9200e062052d971b0276a0b794a013e048b9c6e2469f21",
+      "ar": "اضغط على ~INPUT_ACCEPT~ لحفظ التقدّم في الخانة {0}.",
+      "context_category": "hud",
+      "max_chars": 60,
+      "max_lines": 2,
+      "placeholders": ["~INPUT_ACCEPT~", "{0}"],
+      "glossary_terms": ["term.save_progress"]
+    },
+    {
+      "id": "DUMMY_MIS_OBJ_WAYPOINT",
+      "source_hash": "3c59337282b86d609030f85a64676709349915379e61890878a3501c587a2468",
+      "ar": "اتبع نقطة العبور على الخريطة للوصول إلى الملاذ الآمن.",
+      "context_category": "objective",
+      "max_chars": 65,
+      "max_lines": 2,
+      "placeholders": [],
+      "glossary_terms": ["term.waypoint", "term.map", "term.safehouse"]
+    }
+  ]
+}
