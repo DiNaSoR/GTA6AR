@@ -42,6 +42,10 @@ class TranslationPipelineTests(unittest.TestCase):
         with self.assertRaises(ModelGateError):
             enforce_model_gate("gemini-2.5-flash")
         with self.assertRaises(ModelGateError):
+            enforce_model_gate("gemini-1.5-flash", "3.8")
+        with self.assertRaises(ModelGateError):
+            enforce_model_gate("gemini-3.8-flash", "4.0")
+        with self.assertRaises(ModelGateError):
             enforce_model_gate("gemini-3.5-flash")
         with self.assertRaises(ModelGateError):
             enforce_model_gate("gpt-4o-mini")
@@ -58,14 +62,27 @@ class TranslationPipelineTests(unittest.TestCase):
             generated_at="2026-11-16T18:00:00Z",
         )
         self.assertEqual(patch["schema_version"], "1.0.0")
-        self.assertEqual(patch["generator"]["model_name"], "gemini-3.8-flash")
+        self.assertIn("dry-run", patch["generator"]["model_name"])
+        self.assertEqual(patch["generator"]["model_version"], "dry-run")
         self.assertEqual(len(patch["entries"]), 4)
         for entry in patch["entries"]:
             self.assertNotIn("source_en", entry)
+            self.assertNotIn("Press ", entry["ar"])
+            self.assertNotIn("Follow ", entry["ar"])
             self.assertEqual(len(entry["source_hash"]), 64)
+
+        violations = check_patch_data(patch, self.glossary, file_label="dry_run.patch.json")
+        self.assertIn("dry-run-not-allowed", {v.rule for v in violations})
 
     def test_glossary_checker_passes_valid_sample(self) -> None:
         valid_data = json.loads(self.valid_patch_path.read_text(encoding="utf-8"))
+        valid_data["entries"].append(
+            {
+                "id": "DUMMY_FUSHA_CHECK",
+                "ar": "هذا بالضبط ما يتطلبه إتمام المهمة بعد أن اطّلع القائد على ملف مولود جديد باهتمام.",
+                "context_category": "dialogue",
+            }
+        )
         violations = check_patch_data(valid_data, self.glossary, file_label="dummy_patch_valid.json")
         self.assertEqual(violations, [])
 
@@ -81,6 +98,11 @@ class TranslationPipelineTests(unittest.TestCase):
         self.assertIn("missing-glossary-term", rules_triggered)
         self.assertIn("missing-placeholder", rules_triggered)
         self.assertIn("max-chars-exceeded", rules_triggered)
+
+        bad_schema_data = json.loads(self.valid_patch_path.read_text(encoding="utf-8"))
+        bad_schema_data["entries"][0]["source_en"] = "Start Game"
+        schema_violations = check_patch_data(bad_schema_data, self.glossary, file_label="bad.json")
+        self.assertIn("schema-additional-property", {v.rule for v in schema_violations})
 
         report = format_markdown_report(["dummy_patch_invalid.json"], violations)
         self.assertIn("FAIL", report)

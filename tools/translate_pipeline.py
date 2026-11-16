@@ -3,11 +3,13 @@
 """GTA6AR Arabic translation pipeline (Gemini 3.8 Flash or stronger).
 
 Features:
-- Enforces the project's minimum AI model gate (Gemini >= 3.8).
+- Enforces the project's minimum AI model gate (Gemini >= 3.8), deriving the
+  version directly from the model name and rejecting any mismatch with an
+  explicit version argument.
 - Injects the Fusha style guide and glossary terms into the system prompt.
 - Batches translation requests with a configurable batch size limit.
 - Computes SHA-256 hashes of source strings so original game text is never
-  stored in the output `.patch.json` files.
+  stored in the output `.patch.json` files (including in `--dry-run` mode).
 - Never prints or logs API keys.
 """
 from __future__ import annotations
@@ -35,30 +37,44 @@ class ModelGateError(ValueError):
     """Raised when the requested AI model is below the approved project minimum."""
 
 
+def _parse_version_tuple(version_str: str) -> tuple[int, int] | None:
+    """Parse 'major' or 'major.minor' into an integer tuple."""
+    m = re.fullmatch(r"v?(\d+)(?:\.(\d+))?", version_str.strip().lower())
+    if not m:
+        return None
+    return (int(m.group(1)), int(m.group(2) or 0))
+
+
 def parse_gemini_version(model_name: str, explicit_version: str | None = None) -> tuple[int, int]:
-    """Extract (major, minor) version for a Gemini model and validate it."""
+    """Extract (major, minor) version from a Gemini model name and cross-check `explicit_version`."""
     normalized = model_name.strip().lower()
     if "gemini" not in normalized:
         raise ModelGateError(
             f"Rejected model '{model_name}': translation requires Gemini 3.8 Flash or stronger."
         )
 
-    candidates = []
-    if explicit_version:
-        candidates.append(explicit_version.strip())
-    candidates.append(normalized)
+    m = re.search(r"gemini[-_/\s]*v?(\d+)(?:\.(\d+))?", normalized)
+    if not m:
+        raise ModelGateError(
+            f"Could not determine Gemini version from model name '{model_name}'. "
+            "Model identifier must include version >= 3.8 (e.g. 'gemini-3.8-flash')."
+        )
 
-    for text in candidates:
-        m = re.search(r"(\d+)(?:\.(\d+))?", text)
-        if m:
-            major = int(m.group(1))
-            minor = int(m.group(2) or 0)
-            return (major, minor)
+    name_ver = (int(m.group(1)), int(m.group(2) or 0))
 
-    raise ModelGateError(
-        f"Could not determine version number for model '{model_name}'. "
-        "Specify a valid version (>= 3.8)."
-    )
+    if explicit_version is not None and explicit_version.strip():
+        exp_ver = _parse_version_tuple(explicit_version)
+        if exp_ver is None:
+            raise ModelGateError(
+                f"Invalid explicit model version '{explicit_version}'. Expected format like '3.8'."
+            )
+        if exp_ver != name_ver:
+            raise ModelGateError(
+                f"Model version mismatch: model '{model_name}' is v{name_ver[0]}.{name_ver[1]}, "
+                f"but explicit version '{explicit_version}' was supplied."
+            )
+
+    return name_ver
 
 
 def enforce_model_gate(model_name: str, model_version: str | None = None) -> str:
@@ -70,7 +86,7 @@ def enforce_model_gate(model_name: str, model_version: str | None = None) -> str
     if (major, minor) < MIN_GEMINI_VERSION:
         raise ModelGateError(
             f"Rejected model '{model_name}' (v{major}.{minor}): "
-            f"minimum approved model for GTA6AR translation is Gemini 3.8 Flash (>= 3.8)."
+            "minimum approved model for GTA6AR translation is Gemini 3.8 Flash (>= 3.8)."
         )
     return f"{major}.{minor}"
 
@@ -194,7 +210,7 @@ def call_gemini_api(
 
 
 def dry_run_translate(batch: list[dict[str, Any]], glossary: dict[str, Any]) -> dict[str, str]:
-    """Deterministic offline translation for testing with dummy inputs."""
+    """Deterministic offline translation for testing without copying any English `source_en` text."""
     terms_by_id = {t["id"]: t for t in glossary.get("terms", [])}
     results: dict[str, str] = {}
     for item in batch:
@@ -202,14 +218,15 @@ def dry_run_translate(batch: list[dict[str, Any]], glossary: dict[str, Any]) -> 
             results[item["id"]] = item["ar"]
             continue
 
-        src = item.get("source_en", "")
-        ar_text = src
+        ar_parts: list[str] = ["[معاينة تجريبية]"]
         for tid in item.get("glossary_terms", []):
             term = terms_by_id.get(tid)
-            if term and term.get("source_en") and term.get("target_ar"):
-                pattern = re.compile(re.escape(term["source_en"]), re.IGNORECASE)
-                ar_text = pattern.sub(term["target_ar"], ar_text)
-        results[item["id"]] = ar_text
+            if term and term.get("target_ar"):
+                ar_parts.append(term["target_ar"])
+        for ph in item.get("placeholders", []):
+            ar_parts.append(str(ph))
+
+        results[item["id"]] = " ".join(ar_parts)
     return results
 
 
@@ -277,14 +294,16 @@ def build_patch_document(
         output_entries.append(out_entry)
 
     timestamp = generated_at or dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    recorded_model = f"dry-run ({model_name})" if dry_run else model_name
+    recorded_version = "dry-run" if dry_run else resolved_version
     return {
         "schema_version": SCHEMA_VERSION,
         "domain": domain,
         "batch_id": batch_id,
         "generated_at": timestamp,
         "generator": {
-            "model_name": model_name,
-            "model_version": resolved_version,
+            "model_name": recorded_model,
+            "model_version": recorded_version,
             "pipeline_version": PIPELINE_VERSION,
             "glossary_version": glossary.get("glossary_version", "1.0.0"),
         },
@@ -322,7 +341,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--model-version",
         default=os.environ.get("GTA6AR_GEMINI_VERSION"),
-        help="Explicit model version (e.g. '3.8').",
+        help="Optional explicit model version cross-check (e.g. '3.8').",
     )
     parser.add_argument(
         "--batch-size",
@@ -333,7 +352,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Run offline without calling the API (uses glossary substitution on dummy data).",
+        help="Run offline without calling the API (marks output as dry-run and omits source_en).",
     )
     args = parser.parse_args(argv)
 

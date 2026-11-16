@@ -24,11 +24,56 @@ from typing import Any
 from translate_pipeline import ModelGateError, enforce_model_gate
 
 ARABIC_DIACRITICS_RE = re.compile(r"[\u064B-\u065F\u0670\u0640]")
+ARABIC_WORD_RE = re.compile(r"[\u0621-\u064A]+")
+BATCH_ID_RE = re.compile(r"^[a-z0-9][a-z0-9_-]{2,63}$")
+SHA256_RE = re.compile(r"^[a-fA-F0-9]{64}$")
+DEFAULT_SCHEMA_PATH = Path(__file__).resolve().parents[1] / "text" / "schema" / "text_patch.schema.json"
 
 
 def normalize_arabic(text: str) -> str:
-    """Strip tashkeel/tatweel for resilient substring matching while keeping hamzas."""
+    """Strip tashkeel/tatweel for resilient matching while keeping hamzas."""
     return ARABIC_DIACRITICS_RE.sub("", text)
+
+
+def tokenize_arabic_words(text: str) -> list[str]:
+    """Return normalized Arabic word tokens from `text`."""
+    return ARABIC_WORD_RE.findall(normalize_arabic(text))
+
+
+def build_forbidden_word_forms(forbidden_word: str) -> set[str]:
+    """Build exact whole-word forms for a single forbidden Arabic token."""
+    forms = {forbidden_word, f"و{forbidden_word}", f"ف{forbidden_word}"}
+    if forbidden_word != "الضبط":
+        forms.update({f"ب{forbidden_word}", f"ك{forbidden_word}"})
+        if forbidden_word.startswith("ال") and len(forbidden_word) > 2:
+            forms.add(f"لل{forbidden_word[2:]}")
+    return forms
+
+
+def contains_arabic_phrase(text_with_diacritics: str, text_tokens: list[str], phrase: str) -> bool:
+    """Check whether `phrase` appears as a whole word (or multi-word sequence) in `norm_text`."""
+    phrase_tokens = tokenize_arabic_words(phrase)
+    if not phrase_tokens:
+        return False
+
+    if len(phrase_tokens) == 1:
+        target = phrase_tokens[0]
+        candidate_forms = build_forbidden_word_forms(target)
+        for tok in text_tokens:
+            if tok in candidate_forms:
+                # If the original text explicitly has a shadda (ـّ) such as «اطّلع»,
+                # it is the Fusha verb Form VIII (اطَّلَعَ), not colloquial «اطلع».
+                if target == "اطلع" and "اطّلع" in text_with_diacritics:
+                    continue
+                return True
+        return False
+
+    n = len(phrase_tokens)
+    first_forms = build_forbidden_word_forms(phrase_tokens[0])
+    for i in range(len(text_tokens) - n + 1):
+        if text_tokens[i] in first_forms and text_tokens[i + 1 : i + n] == phrase_tokens[1:]:
+            return True
+    return False
 
 
 @dataclass
@@ -39,28 +84,181 @@ class Violation:
     message: str
 
 
+def validate_against_schema(
+    patch_data: dict[str, Any],
+    schema: dict[str, Any],
+    file_label: str,
+) -> list[Violation]:
+    """Enforce `text/schema/text_patch.schema.json` structural constraints using stdlib."""
+    violations: list[Violation] = []
+    if not isinstance(patch_data, dict):
+        return [Violation(file_label, "<root>", "schema-invalid", "Root document must be a JSON object.")]
+
+    required_root = set(schema.get("required", []))
+    allowed_root = set(schema.get("properties", {}).keys())
+    for req in sorted(required_root):
+        if req not in patch_data:
+            violations.append(
+                Violation(file_label, "<root>", "schema-missing-field", f"Missing required root field '{req}'.")
+            )
+    for key in patch_data:
+        if allowed_root and key not in allowed_root:
+            violations.append(
+                Violation(file_label, "<root>", "schema-additional-property", f"Unexpected root field '{key}'.")
+            )
+
+    if patch_data.get("schema_version") != "1.0.0":
+        violations.append(
+            Violation(file_label, "<root>", "schema-version", "schema_version must be '1.0.0'.")
+        )
+
+    allowed_domains = set(
+        schema.get("properties", {}).get("domain", {}).get("enum", ["ui", "subtitles", "missions"])
+    )
+    if patch_data.get("domain") not in allowed_domains:
+        violations.append(
+            Violation(
+                file_label,
+                "<root>",
+                "schema-domain",
+                f"Invalid domain '{patch_data.get('domain')}'; must be one of {sorted(allowed_domains)}.",
+            )
+        )
+
+    batch_id = str(patch_data.get("batch_id", ""))
+    if not BATCH_ID_RE.match(batch_id):
+        violations.append(
+            Violation(
+                file_label,
+                "<root>",
+                "schema-batch-id",
+                f"Invalid batch_id '{batch_id}'; must match {BATCH_ID_RE.pattern}.",
+            )
+        )
+
+    gen = patch_data.get("generator")
+    gen_schema = schema.get("properties", {}).get("generator", {})
+    if not isinstance(gen, dict):
+        violations.append(Violation(file_label, "<generator>", "schema-generator", "'generator' must be an object."))
+    else:
+        req_gen = set(gen_schema.get("required", []))
+        allow_gen = set(gen_schema.get("properties", {}).keys())
+        for req in sorted(req_gen):
+            if req not in gen or not isinstance(gen[req], str) or not gen[req].strip():
+                violations.append(
+                    Violation(
+                        file_label,
+                        "<generator>",
+                        "schema-generator-field",
+                        f"Missing or empty generator field '{req}'.",
+                    )
+                )
+        for k in gen:
+            if allow_gen and k not in allow_gen:
+                violations.append(
+                    Violation(
+                        file_label,
+                        "<generator>",
+                        "schema-additional-property",
+                        f"Unexpected generator field '{k}'.",
+                    )
+                )
+
+    entry_schema = schema.get("properties", {}).get("entries", {}).get("items", {})
+    allow_entry_keys = set(entry_schema.get("properties", {}).keys())
+    allow_categories = set(
+        entry_schema.get("properties", {})
+        .get("context_category", {})
+        .get("enum", ["menu", "settings", "hud", "prompt", "dialogue", "objective", "notification", "other"])
+    )
+
+    entries = patch_data.get("entries")
+    if isinstance(entries, list):
+        for idx, item in enumerate(entries):
+            if not isinstance(item, dict):
+                violations.append(
+                    Violation(file_label, f"<entry[{idx}]>", "schema-entry", "Entry must be an object.")
+                )
+                continue
+            eid = str(item.get("id", f"<entry[{idx}]>"))
+            for k in item:
+                if allow_entry_keys and k not in allow_entry_keys:
+                    violations.append(
+                        Violation(
+                            file_label,
+                            eid,
+                            "schema-additional-property",
+                            f"Unexpected entry field '{k}' (remember: never store source_en).",
+                        )
+                    )
+            if "source_hash" in item and not SHA256_RE.match(str(item["source_hash"])):
+                violations.append(
+                    Violation(file_label, eid, "schema-source-hash", "source_hash must be a 64-char hex SHA-256.")
+                )
+            if "context_category" in item and item["context_category"] not in allow_categories:
+                violations.append(
+                    Violation(
+                        file_label,
+                        eid,
+                        "schema-context-category",
+                        f"Invalid context_category '{item['context_category']}'.",
+                    )
+                )
+            if "timing_ms" in item:
+                tm = item["timing_ms"]
+                if (
+                    not isinstance(tm, dict)
+                    or not isinstance(tm.get("start"), int)
+                    or not isinstance(tm.get("end"), int)
+                    or tm["start"] < 0
+                    or tm["end"] < 1
+                ):
+                    violations.append(
+                        Violation(file_label, eid, "schema-timing-ms", "Invalid timing_ms object.")
+                    )
+
+    return violations
+
+
 def check_patch_data(
     patch_data: dict[str, Any],
     glossary: dict[str, Any],
     file_label: str = "<memory>",
+    schema: dict[str, Any] | None = None,
 ) -> list[Violation]:
     """Validate a parsed patch dictionary against the glossary and schema rules."""
     violations: list[Violation] = []
 
-    generator = patch_data.get("generator", {})
-    model_name = generator.get("model_name", "")
+    if schema is None and DEFAULT_SCHEMA_PATH.is_file():
+        schema = json.loads(DEFAULT_SCHEMA_PATH.read_text(encoding="utf-8"))
+    if schema is not None:
+        violations.extend(validate_against_schema(patch_data, schema, file_label))
+
+    generator = patch_data.get("generator", {}) if isinstance(patch_data.get("generator"), dict) else {}
+    model_name = str(generator.get("model_name", ""))
     model_version = generator.get("model_version")
-    try:
-        enforce_model_gate(str(model_name), str(model_version) if model_version else None)
-    except ModelGateError as exc:
+
+    if "dry-run" in model_name.lower() or str(model_version).lower() == "dry-run":
         violations.append(
             Violation(
                 file_path=file_label,
                 entry_id="<generator>",
-                rule="model-gate",
-                message=str(exc),
+                rule="dry-run-not-allowed",
+                message="Dry-run output is for local testing only and cannot pass release/PR validation.",
             )
         )
+    else:
+        try:
+            enforce_model_gate(model_name, str(model_version) if model_version else None)
+        except ModelGateError as exc:
+            violations.append(
+                Violation(
+                    file_path=file_label,
+                    entry_id="<generator>",
+                    rule="model-gate",
+                    message=str(exc),
+                )
+            )
 
     terms_by_id: dict[str, dict[str, Any]] = {}
     all_terms: list[dict[str, Any]] = glossary.get("terms", [])
@@ -108,12 +306,12 @@ def check_patch_data(
             continue
 
         norm_ar = normalize_arabic(ar_text)
+        ar_tokens = tokenize_arabic_words(ar_text)
 
-        # 1. Check all forbidden terms across the glossary
+        # 1. Check all forbidden terms across the glossary using whole-word matching
         for term in all_terms:
             for forbidden in term.get("forbidden_ar", []):
-                norm_forbid = normalize_arabic(forbidden)
-                if norm_forbid and norm_forbid in norm_ar:
+                if contains_arabic_phrase(ar_text, ar_tokens, forbidden):
                     violations.append(
                         Violation(
                             file_path=file_label,
