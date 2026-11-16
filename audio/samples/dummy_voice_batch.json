@@ -1,0 +1,32 @@
+{
+  "scene_id": "dummy-scene-001",
+  "lines": [
+    {
+      "id": "DUMMY_VO_LINE_01",
+      "role_id": "role.lead_female_01",
+      "ar": "اتبع نقطة العبور الآن، لم يتبقَّ أمامنا سوى دقيقتين.",
+      "timing_ms": {
+        "start": 0,
+        "end": 3600
+      }
+    },
+    {
+      "id": "DUMMY_VO_LINE_02",
+      "role_id": "role.lead_male_01",
+      "ar": "الطريق الرئيسي مغلق بالكامل، سنسلك الممر الفرعي نحو الملاذ الآمن بسرعة قبل وصول الدوريات إلى الموقع.",
+      "timing_ms": {
+        "start": 3800,
+        "end": 6200
+      }
+    },
+    {
+      "id": "DUMMY_VO_LINE_03",
+      "role_id": "role.dispatcher_neutral",
+      "ar": "تأكيد الوصول إلى نقطة الحفظ المرحلية.",
+      "timing_ms": {
+        "start": 6500,
+        "end": 9000
+      }
+    }
+  ]
+}
