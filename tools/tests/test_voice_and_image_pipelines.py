@@ -27,6 +27,7 @@ from voice_pipeline import (  # noqa: E402
     align_line_timing,
     build_voice_manifest,
     enforce_voice_model_gate,
+    estimate_speech_duration_ms,
 )
 
 
@@ -51,6 +52,10 @@ class VoiceAndImagePipelineTests(unittest.TestCase):
         with self.assertRaises(VoiceModelGateError):
             enforce_voice_model_gate("eleven_multilingual_v2")
         with self.assertRaises(VoiceModelGateError):
+            enforce_voice_model_gate("eleven_multilingual_v2", "4.0")
+        with self.assertRaises(VoiceModelGateError):
+            enforce_voice_model_gate("11labs_v2")
+        with self.assertRaises(VoiceModelGateError):
             enforce_voice_model_gate("eleven_turbo_v2.5")
         with self.assertRaises(VoiceModelGateError):
             enforce_voice_model_gate("generic-tts-v1")
@@ -65,20 +70,30 @@ class VoiceAndImagePipelineTests(unittest.TestCase):
         )
         self.assertEqual(manifest["generator"]["model_name"], "eleven_v4")
         self.assertEqual(len(manifest["items"]), 3)
+        self.assertEqual(
+            manifest["items"][0]["fusha_pronunciation_qa"]["status"],
+            "SPEC_VALIDATED",
+        )
         statuses = [item["timing_alignment"]["alignment_status"] for item in manifest["items"]]
         self.assertIn("OK", statuses)
         self.assertIn("REGENERATE_SHORTEN_TEXT", statuses)
+
+        plain_ms = estimate_speech_duration_ms("تأكيد الوصول الآن", chars_per_sec=14.0)
+        vocalized_ms = estimate_speech_duration_ms("تَأْكِيدُ الْوُصُولِ الآنَ", chars_per_sec=14.0)
+        self.assertEqual(plain_ms, vocalized_ms)
 
         ok_align = align_line_timing("تأكيد الوصول الآن.", target_duration_ms=1300, chars_per_sec=14.0)
         self.assertEqual(ok_align["alignment_status"], "OK")
 
     def test_image_model_gate_accepts_sunburn_and_rejects_weaker(self) -> None:
         self.assertEqual(enforce_image_model_gate("openai-sunburn", "1.0"), "1.0")
-        self.assertEqual(enforce_image_model_gate("sunburn-v2"), "2")
+        self.assertEqual(enforce_image_model_gate("sunburn-v2"), "2.0")
         with self.assertRaises(ImageModelGateError):
             enforce_image_model_gate("dall-e-3")
         with self.assertRaises(ImageModelGateError):
             enforce_image_model_gate("sdxl")
+        with self.assertRaises(ImageModelGateError):
+            enforce_image_model_gate("not-sunburn-at-all")
 
     def test_image_manifest_and_arabic_in_image_qa_standards(self) -> None:
         manifest = build_image_manifest(
@@ -89,7 +104,20 @@ class VoiceAndImagePipelineTests(unittest.TestCase):
             generated_at="2026-11-16T19:00:00Z",
         )
         self.assertEqual(len(manifest["items"]), 2)
-        self.assertEqual(manifest["items"][0]["visual_qa_status"], "PASS")
+        self.assertEqual(manifest["items"][0]["visual_qa_status"], "SPEC_VALIDATED")
+
+        low_contrast_road_sign = {
+            "id": "WARN_SIGN_LOW_CONTRAST",
+            "category_id": "cat.road_and_transit_signs",
+            "arabic_text": "تحذير: منحطف خطر",
+            "font_family": "Cairo",
+            "font_size_px": 32,
+            "contrast_ratio": 5.5,
+            "direction": "RTL",
+        }
+        warn_errors = validate_arabic_image_item(low_contrast_road_sign, self.visual_catalog)
+        self.assertEqual(len(warn_errors), 1)
+        self.assertIn("7.0:1", warn_errors[0])
 
         bad_item = {
             "id": "BAD_SIGN",

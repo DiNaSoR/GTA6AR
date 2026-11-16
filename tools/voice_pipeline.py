@@ -19,6 +19,8 @@ import json
 import os
 import re
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 from typing import Any
 
@@ -27,10 +29,34 @@ MIN_ELEVENLABS_VERSION = (4, 0)
 MAX_SAFE_SPEAKING_RATE = 1.18
 MIN_SAFE_SPEAKING_RATE = 0.85
 TIMING_TOLERANCE_RATIO = 0.12  # +/- 12%
+ARABIC_DIACRITICS_RE = re.compile(r"[\u0610-\u061A\u064B-\u065F\u0670]")
+
+
+def strip_diacritics(text: str) -> str:
+    """Remove Arabic harakat/tashkeel so character counts reflect spoken letters only."""
+    return ARABIC_DIACRITICS_RE.sub("", text)
+
+
+def redact_secrets(text: str) -> str:
+    """Redact API keys or tokens from error messages before logging."""
+    redacted = re.sub(r"sk_[a-fA-F0-9]{20,}", "[REDACTED]", text)
+    redacted = re.sub(r"xi-api-key:\s*[^\s]+", "xi-api-key: [REDACTED]", redacted, flags=re.IGNORECASE)
+    return redacted
 
 
 class VoiceModelGateError(ValueError):
     """Raised when the voice model is weaker than ElevenLabs v4."""
+
+
+def _extract_elevenlabs_version(text: str) -> tuple[int, int] | None:
+    """Extract version tuple from model string without matching '11' in '11labs'."""
+    cleaned = re.sub(r"\b11labs\b", "elevenlabs", text.lower())
+    m = re.search(r"(?:[_\-\s]v|^v|version\s*)(\d+)(?:\.(\d+))?", cleaned)
+    if not m:
+        m = re.search(r"^(\d+)(?:\.(\d+))?$", cleaned.strip())
+    if m:
+        return (int(m.group(1)), int(m.group(2) or 0))
+    return None
 
 
 def enforce_voice_model_gate(model_name: str, explicit_version: str | None = None) -> str:
@@ -41,31 +67,37 @@ def enforce_voice_model_gate(model_name: str, explicit_version: str | None = Non
             f"Rejected voice model '{model_name}': minimum approved model is ElevenLabs v4."
         )
 
-    candidates = []
-    if explicit_version:
-        candidates.append(explicit_version.strip())
-    candidates.append(norm)
+    name_ver = _extract_elevenlabs_version(norm)
+    explicit_ver = _extract_elevenlabs_version(explicit_version) if explicit_version else None
 
-    for text in candidates:
-        m = re.search(r"v?(\d+)(?:\.(\d+))?", text)
-        if m:
-            major = int(m.group(1))
-            minor = int(m.group(2) or 0)
-            if (major, minor) < MIN_ELEVENLABS_VERSION:
-                raise VoiceModelGateError(
-                    f"Rejected voice model '{model_name}' (v{major}.{minor}): "
-                    "minimum approved model is ElevenLabs v4 (>= 4.0)."
-                )
-            return f"{major}.{minor}"
+    if name_ver is not None and name_ver < MIN_ELEVENLABS_VERSION:
+        raise VoiceModelGateError(
+            f"Rejected voice model '{model_name}' (v{name_ver[0]}.{name_ver[1]}): "
+            "minimum approved model is ElevenLabs v4 (>= 4.0)."
+        )
 
-    raise VoiceModelGateError(
-        f"Could not determine version for voice model '{model_name}'. Specify >= 4.0."
-    )
+    if name_ver is not None and explicit_ver is not None and name_ver != explicit_ver:
+        raise VoiceModelGateError(
+            f"Version mismatch between model '{model_name}' (v{name_ver[0]}.{name_ver[1]}) "
+            f"and explicit version '{explicit_version}'."
+        )
+
+    resolved = name_ver or explicit_ver
+    if resolved is None:
+        raise VoiceModelGateError(
+            f"Could not determine version for voice model '{model_name}'. Specify >= 4.0."
+        )
+    if resolved < MIN_ELEVENLABS_VERSION:
+        raise VoiceModelGateError(
+            f"Rejected voice model '{model_name}' (v{resolved[0]}.{resolved[1]}): "
+            "minimum approved model is ElevenLabs v4 (>= 4.0)."
+        )
+    return f"{resolved[0]}.{resolved[1]}"
 
 
 def estimate_speech_duration_ms(ar_text: str, chars_per_sec: float, speaking_rate: float = 1.0) -> int:
-    """Estimate spoken duration in milliseconds for an Arabic Fusha line."""
-    clean = re.sub(r"\s+", " ", ar_text).strip()
+    """Estimate spoken duration in milliseconds for an Arabic Fusha line (ignoring harakat)."""
+    clean = re.sub(r"\s+", " ", strip_diacritics(ar_text)).strip()
     effective_cps = max(1.0, chars_per_sec * max(0.5, speaking_rate))
     seconds = len(clean) / effective_cps
     return int(round(seconds * 1000))
@@ -115,12 +147,59 @@ def align_line_timing(
     }
 
 
+def synthesize_elevenlabs_audio(
+    text: str,
+    voice_id: str,
+    model_id: str,
+    voice_settings: dict[str, Any],
+    api_key: str,
+    output_path: Path,
+) -> None:
+    """Call ElevenLabs v1 text-to-speech HTTP endpoint and save audio to `output_path`."""
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+    payload = {
+        "text": text,
+        "model_id": model_id,
+        "voice_settings": {
+            "stability": voice_settings.get("stability", 0.7),
+            "similarity_boost": voice_settings.get("similarity_boost", 0.8),
+            "style": voice_settings.get("style", 0.25),
+            "speed": voice_settings.get("speaking_rate", 1.0),
+        },
+    }
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "audio/mpeg",
+            "xi-api-key": api_key,
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            audio_bytes = resp.read()
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_bytes(audio_bytes)
+    except urllib.error.HTTPError as exc:
+        err_body = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(
+            f"ElevenLabs API error ({exc.code}): {redact_secrets(err_body)}"
+        ) from exc
+    except urllib.error.URLError as exc:
+        raise RuntimeError(f"ElevenLabs network error: {redact_secrets(str(exc))}") from exc
+
+
 def build_voice_manifest(
     batch_data: dict[str, Any],
     profiles_data: dict[str, Any],
     model_name: str,
     model_version: str | None = None,
     generated_at: str | None = None,
+    synthesize_audio: bool = False,
+    api_key: str | None = None,
+    output_root: Path | None = None,
 ) -> dict[str, Any]:
     """Generate a complete `.voice.json` dubbing manifest with timing alignment and QA metadata."""
     resolved_version = enforce_voice_model_gate(model_name, model_version)
@@ -132,6 +211,9 @@ def build_voice_manifest(
     lines = batch_data.get("lines", [])
     if not lines:
         raise ValueError("Voice batch contains no lines.")
+
+    if synthesize_audio and not api_key:
+        raise ValueError("ELEVENLABS_API_KEY is required when --synthesize is enabled.")
 
     manifest_items: list[dict[str, Any]] = []
     for line in lines:
@@ -153,19 +235,37 @@ def build_voice_manifest(
             base_rate=base_rate,
         )
 
+        rel_audio_path = f"audio/generated/{scene_id}/{lid}.ogg"
+        voice_settings = {
+            **profile.get("settings", {}),
+            "speaking_rate": alignment["recommended_speaking_rate"],
+        }
+
+        if synthesize_audio and api_key:
+            voice_id = str(profile.get("elevenlabs_voice_id", "JBFqnCBsd6RMkjVDRZzb"))
+            dest_root = output_root or Path.cwd()
+            synthesize_elevenlabs_audio(
+                text=line["ar"],
+                voice_id=voice_id,
+                model_id=model_name,
+                voice_settings=voice_settings,
+                api_key=api_key,
+                output_path=dest_root / rel_audio_path,
+            )
+            qa_status = "PENDING_LISTENING_QA"
+        else:
+            qa_status = "SPEC_VALIDATED"
+
         manifest_items.append(
             {
                 "id": lid,
                 "role_id": role_id,
                 "ar": line["ar"],
-                "output_audio_path": f"audio/generated/{scene_id}/{lid}.ogg",
-                "voice_settings": {
-                    **profile.get("settings", {}),
-                    "speaking_rate": alignment["recommended_speaking_rate"],
-                },
+                "output_audio_path": rel_audio_path,
+                "voice_settings": voice_settings,
                 "timing_alignment": alignment,
                 "fusha_pronunciation_qa": {
-                    "status": "PENDING_LISTENING_QA",
+                    "status": qa_status,
                     "checks": [
                         "articulation_and_grammar_endings",
                         "hamzat_wasl_and_solar_lam",
@@ -213,8 +313,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--model-version",
-        default=os.environ.get("GTA6AR_VOICE_VERSION", "4.0"),
-        help="Explicit model version (>= 4.0).",
+        default=os.environ.get("GTA6AR_VOICE_VERSION"),
+        help="Optional explicit model version (>= 4.0).",
+    )
+    parser.add_argument(
+        "--synthesize",
+        action="store_true",
+        help="Call ElevenLabs TTS HTTP API to generate audio files (requires ELEVENLABS_API_KEY).",
     )
     args = parser.parse_args(argv)
 
@@ -226,6 +331,9 @@ def main(argv: list[str] | None = None) -> int:
             profiles_data=profiles_data,
             model_name=args.model,
             model_version=args.model_version,
+            synthesize_audio=args.synthesize,
+            api_key=os.environ.get("ELEVENLABS_API_KEY"),
+            output_root=Path(__file__).resolve().parents[1],
         )
     except Exception as exc:
         print(f"[ERROR] {exc}", file=sys.stderr)
