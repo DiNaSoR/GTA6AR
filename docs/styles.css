@@ -778,52 +778,22 @@ p { text-wrap: pretty; }
   box-shadow: inset 0 0 0 1px rgba(63, 230, 255, 0.35);
 }
 
-/* ---------- Story: sunset scene ---------- */
+/* ---------- Story hero ---------- */
 
 .scene {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  min-height: clamp(22rem, 52vw, 34rem);
+  min-height: 0;
   display: grid;
   align-content: end;
   padding: clamp(1.25rem, 4vw, 3rem);
-  --sun-x: 24%;
-  --horizon: 66%;
+  /* Art band above the copy, so both faces stay clear in Arabic and English. */
+  padding-top: clamp(16rem, 34vw, 24rem);
   border-radius: 6px;
   outline: var(--frame) solid var(--ink);
-  background:
-    linear-gradient(180deg, #1a0745 0, #5b148f calc(var(--horizon) * 0.4), #c2238f calc(var(--horizon) * 0.7), #ff5f6d calc(var(--horizon) * 0.88), #ffb347 var(--horizon), #0c4a6b var(--horizon), #060f24 100%);
+  background: #1a0745 url("assets/story-hero.jpg") center 22% / cover no-repeat;
 }
-/* The sun: slatted disc sitting on the horizon. */
-.scene::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  left: var(--sun-x);
-  top: var(--horizon);
-  width: clamp(12rem, 34vw, 24rem);
-  aspect-ratio: 1;
-  transform: translate(-50%, -62%);
-  border-radius: 50%;
-  background: linear-gradient(180deg, #fff3b0 0%, #ffc15a 35%, #ff5fa2 78%, #d63cff 100%);
-  mask-image: linear-gradient(180deg, #000 0 46%, transparent 46% 48%, #000 48% 53%, transparent 53% 56.5%, #000 56.5% 60%, transparent 60%);
-  -webkit-mask-image: linear-gradient(180deg, #000 0 46%, transparent 46% 48%, #000 48% 53%, transparent 53% 56.5%, #000 56.5% 60%, transparent 60%);
-  filter: drop-shadow(0 0 40px rgba(255, 138, 31, 0.7));
-}
-/* Water is opaque so the sun rises from behind the horizon; streaks fade away from it. */
-.scene::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: var(--horizon) 0 0 0;
-  background:
-    linear-gradient(180deg, transparent 0%, rgba(6, 3, 20, 0.85) 100%),
-    radial-gradient(45% 130% at var(--sun-x) 0%, transparent 15%, #0a3350 80%),
-    repeating-linear-gradient(180deg, rgba(255, 179, 71, 0.6) 0 2px, transparent 2px 13px),
-    linear-gradient(180deg, #0c4a6b, #07233f 55%, #060f24);
-}
-html[dir="ltr"] .scene { --sun-x: 76%; }
 .scene-copy {
   max-width: 36rem;
   padding: clamp(1rem, 3vw, 1.6rem);
@@ -833,14 +803,6 @@ html[dir="ltr"] .scene { --sun-x: 76%; }
   backdrop-filter: blur(8px);
 }
 .scene-copy .page-title { font-size: clamp(2.2rem, 5.2vw, 4rem); }
-
-@media (prefers-reduced-motion: no-preference) {
-  .scene::before { animation: sunrise 1.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
-  @keyframes sunrise {
-    from { transform: translate(-50%, -20%); opacity: 0.2; }
-    to { transform: translate(-50%, -62%); opacity: 1; }
-  }
-}
 
 /* ---------- Facts ---------- */
 
@@ -968,62 +930,15 @@ a.tile:hover { color: var(--text); text-shadow: none; filter: brightness(1.15) s
 a.tile:focus-visible { outline-offset: -4px; }
 .tile-go { margin: 0.6rem 0 0; font-weight: 700; color: var(--cyan); }
 
-/* Jason: dusk over the Keys */
-.t-jason::before {
-  background:
-    radial-gradient(circle at 50% 43%, #fff3b0 0 7%, #ffc15a 7.2% 10%, transparent 10.3%),
-    linear-gradient(180deg, #24084f 0%, #8f1f8a 24%, #ff6a5c 38%, #ffc15a 44%, #0e5d78 44.3%, #072b46 70%, #060f24 100%);
-}
-/* Lucia: Vice City at night */
-.t-lucia::before {
-  background:
-    linear-gradient(#0a0318, #0a0318) 6% 46% / 9% 20% no-repeat,
-    linear-gradient(#0a0318, #0a0318) 17% 46% / 7% 30% no-repeat,
-    linear-gradient(#0a0318, #0a0318) 27% 46% / 11% 15% no-repeat,
-    linear-gradient(#0a0318, #0a0318) 42% 46% / 8% 36% no-repeat,
-    linear-gradient(#0a0318, #0a0318) 54% 46% / 12% 22% no-repeat,
-    linear-gradient(#0a0318, #0a0318) 70% 46% / 7% 32% no-repeat,
-    linear-gradient(#0a0318, #0a0318) 82% 46% / 10% 18% no-repeat,
-    linear-gradient(#0a0318, #0a0318) 96% 46% / 8% 26% no-repeat,
-    linear-gradient(180deg, #120640 0%, #4c1290 20%, #d62aa8 38%, #ff8a1f 46%, #0a0318 46.2%);
-}
-/* Cal: radio waves */
-.t-cal::before {
-  background:
-    repeating-radial-gradient(circle at 78% 22%, rgba(63, 230, 255, 0.55) 0 2px, transparent 2px 24px),
-    linear-gradient(160deg, #04283a, #0a0f2e 70%);
-}
-/* Boobie Ike: gold and velvet */
-.t-boobie::before {
-  background:
-    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.12) 0 2px, transparent 2px 22px),
-    linear-gradient(140deg, #ffd166 0%, #c9791a 30%, #5a1a6e 62%, #1a0633 100%);
-}
-/* Dre'Quan: a record */
-.t-drequan::before {
-  background:
-    radial-gradient(circle at 50% 30%, #ff2ec4 0 6%, #ff8a1f 6.2% 9%, transparent 9.3%),
-    repeating-radial-gradient(circle at 50% 30%, #0d0716 0 3px, #2a1746 3px 6px);
-}
-/* Real Dimez: halftone pop */
-.t-dimez::before {
-  background:
-    radial-gradient(circle, rgba(255, 255, 255, 0.5) 1.6px, transparent 2.2px) 0 0 / 15px 15px,
-    linear-gradient(150deg, #ff2ec4 0%, #ff5f6d 34%, #8b4dff 70%, #1a0633 100%);
-}
-/* Raul: vault dial */
-.t-raul::before {
-  background:
-    radial-gradient(circle at 50% 30%, #0b1630 0 12%, transparent 12.3%),
-    repeating-conic-gradient(from 0deg at 50% 30%, rgba(255, 255, 255, 0.5) 0 1.5deg, transparent 1.5deg 15deg),
-    radial-gradient(circle at 50% 30%, #5d7fb0 0 26%, #22365c 26.3% 34%, #0b1630 34.3%);
-}
-/* Brian: boat yard swell */
-.t-brian::before {
-  background:
-    repeating-radial-gradient(ellipse 120% 60% at 50% 118%, rgba(255, 193, 90, 0.5) 0 2px, transparent 2px 20px),
-    linear-gradient(180deg, #ff8a1f 0%, #c2238f 30%, #0e5d78 52%, #062338 100%);
-}
+/* Official promo stills. Position keeps each face above the caption fade. */
+.t-jason::before { background: url("assets/characters/jason.jpg") 32% 8% / cover no-repeat; }
+.t-lucia::before { background: url("assets/characters/lucia.jpg") center 18% / cover no-repeat; }
+.t-cal::before { background: url("assets/characters/cal.jpg") center top / cover no-repeat; }
+.t-boobie::before { background: url("assets/characters/boobie.jpg") center top / cover no-repeat; }
+.t-drequan::before { background: url("assets/characters/drequan.jpg") center top / cover no-repeat; }
+.t-dimez::before { background: url("assets/characters/dimez.jpg") center top / cover no-repeat; }
+.t-raul::before { background: url("assets/characters/raul.jpg") center top / cover no-repeat; }
+.t-brian::before { background: url("assets/characters/brian.jpg") center top / cover no-repeat; }
 
 /* ---------- Name tables ---------- */
 
@@ -1172,13 +1087,9 @@ a.tile:focus-visible { outline-offset: -4px; }
 .tile-name::after, .stop-body h2::after { content: none; }
 .stop-body h2 { font-size: clamp(1.7rem, 3.4vw, 2.3rem); text-shadow: none; }
 
+/* Phones: keep a band of the hero above the headline, and give tile art its own band. */
 @media (max-width: 720px) {
-  .scene, html[dir="ltr"] .scene { --sun-x: 50%; }
-}
-
-/* Phones: keep the sunset visible above the headline, and give tile art its own band. */
-@media (max-width: 720px) {
-  .scene { --horizon: 10.5rem; padding-top: 12rem; min-height: 0; }
+  .scene { padding-top: 12rem; min-height: 0; }
 }
 @media (max-width: 620px) {
   .tile, .tile-lead { min-height: 0; padding-top: 11.5rem; }
