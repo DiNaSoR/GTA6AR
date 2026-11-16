@@ -25,11 +25,13 @@ from rtl_shaper import (  # noqa: E402
     isolate_bidi_tokens,
     normalize_numerals,
     shape_arabic_text,
+    visual_reorder_line,
 )
 from text_tool import (  # noqa: E402
     CsvTableAdapter,
     IniKeyValueAdapter,
     JsonKeyValueAdapter,
+    detect_placeholders,
     extract_to_batch,
     inject_patch,
     render_rtl_preview_html,
@@ -113,17 +115,49 @@ class RtlShapingAndExtractorTests(unittest.TestCase):
         self.assertEqual(csv_count, 1)
         self.assertIn("القائمة الرئيسة", injected_csv)
 
-        # 3. INI adapter
+        # 3. INI adapter (with section-qualified IDs, multiline escaping, BOM, and CRLF preservation)
         ini_adapter = IniKeyValueAdapter()
-        ini_src = "# Dummy config\n[Menu]\nDUMMY_MENU_TITLE = Main Menu\n"
+        crlf = chr(13) + chr(10)
+        ini_src = (
+            "\ufeff# Dummy config"
+            + crlf
+            + "[Menu]"
+            + crlf
+            + "TITLE = Main Menu"
+            + crlf
+            + "[Shop]"
+            + crlf
+            + "TITLE = Weapon Shop"
+            + crlf
+        )
+        ini_records = ini_adapter.read_records(ini_src)
+        self.assertEqual([r.id for r in ini_records], ["Menu.TITLE", "Shop.TITLE"])
+
+        ini_patch = {
+            "entries": [
+                {"id": "Menu.TITLE", "ar": "القائمة الرئيسة"},
+                {"id": "Shop.TITLE", "ar": "متجر المعدات\nالفرع الأول"},
+            ]
+        }
         injected_ini, ini_count = inject_patch(
             original_content=ini_src,
-            patch_data=patch_data,
+            patch_data=ini_patch,
             adapter=ini_adapter,
             verify_hashes=False,
         )
-        self.assertEqual(ini_count, 1)
-        self.assertIn("DUMMY_MENU_TITLE = القائمة الرئيسة", injected_ini)
+        self.assertEqual(ini_count, 2)
+        self.assertIn("TITLE = القائمة الرئيسة" + crlf, injected_ini)
+        self.assertIn("TITLE = متجر المعدات" + chr(92) + "nالفرع الأول" + crlf, injected_ini)
+
+    def test_extended_placeholders_and_visual_order(self) -> None:
+        sample = "Speed: %.2f km/h | Pos: %1$s | Cash: {0:N2} | <font color='red'>Alert</font>"
+        phs = detect_placeholders(sample)
+        self.assertEqual(phs, ["%.2f", "%1$s", "{0:N2}", "<font color='red'>", "</font>"])
+
+        shaped = shape_arabic_text("كتب 10")
+        reordered = visual_reorder_line(shaped)
+        self.assertTrue(reordered.startswith("10"))
+        self.assertTrue(reordered.endswith("\uFEDB"))
 
     def test_rtl_preview_html_generation(self) -> None:
         patch_path = ROOT / "text" / "samples" / "dummy_patch_rtl.json"

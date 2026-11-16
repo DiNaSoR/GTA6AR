@@ -30,7 +30,7 @@ WESTERN_DIGITS = "0123456789"
 EASTERN_TO_WESTERN_TABLE = str.maketrans(EASTERN_ARABIC_DIGITS, WESTERN_DIGITS)
 
 PLACEHOLDER_TOKEN_RE = re.compile(
-    r"(~\w+~|\{[a-zA-Z0-9_]+\}|%[sdif]|<[A-Za-z0-9_/]+>)"
+    r"(~\w+~|\{[a-zA-Z0-9_]+(?::[^}]+)?\}|%(?:\d+\$)?[-+0# ]*\d*(?:\.\d+)?[sdifuxX%]|<[A-Za-z0-9_/][^>]*>)"
 )
 
 # Arabic letters mapping: base_char -> (isolated, final, initial, medial)
@@ -188,6 +188,42 @@ def shape_arabic_text(text: str) -> str:
             out.append(isolated)
 
     return "".join(out)
+
+
+def visual_reorder_line(text: str) -> str:
+    """Reorder a shaped Arabic line into visual LTR order while keeping LTR runs intact.
+
+    Intended only for legacy game UI renderers that lack any Unicode BiDi algorithm
+    (`--visual-order` flag in `text_tool.py`).
+    """
+    ltr_run_re = re.compile(
+        r"(~\w+~|\{[a-zA-Z0-9_]+(?::[^}]+)?\}|%(?:\d+\$)?[-+0# ]*\d*(?:\.\d+)?[sdifuxX%]|<[A-Za-z0-9_/][^>]*>|[A-Za-z0-9$.,:/+-]+)"
+    )
+    tokens: list[tuple[bool, str]] = []
+    pos = 0
+    for m in ltr_run_re.finditer(text):
+        if m.start() > pos:
+            tokens.append((False, text[pos : m.start()]))
+        tokens.append((True, m.group(0)))
+        pos = m.end()
+    if pos < len(text):
+        tokens.append((False, text[pos:]))
+
+    mirror_pairs = str.maketrans("()[]{}<>«»", ")(][}{><»»"[:8] + "»«")
+    visual_parts: list[str] = []
+    for is_ltr, segment in reversed(tokens):
+        if is_ltr:
+            visual_parts.append(segment)
+        else:
+            # Keep combining diacritics attached after their base glyph when reversing
+            clusters: list[str] = []
+            for ch in segment:
+                if is_diacritic(ch) and clusters:
+                    clusters[-1] += ch
+                else:
+                    clusters.append(ch.translate(mirror_pairs))
+            visual_parts.append("".join(reversed(clusters)))
+    return "".join(visual_parts)
 
 
 def isolate_bidi_tokens(text: str) -> str:

@@ -37,11 +37,27 @@ from rtl_shaper import (
     isolate_bidi_tokens,
     normalize_numerals,
     shape_arabic_text,
+    visual_reorder_line,
 )
 
 PLACEHOLDER_SCAN_RE = re.compile(
-    r"(~\w+~|\{[a-zA-Z0-9_]+\}|%[sdif]|<[A-Za-z0-9_/]+>)"
+    r"(~\w+~|\{[a-zA-Z0-9_]+(?::[^}]+)?\}|%(?:\d+\$)?[-+0# ]*\d*(?:\.\d+)?[sdifuxX%]|<[A-Za-z0-9_/][^>]*>)"
 )
+
+
+def strip_bom(content: str) -> str:
+    """Strip leading UTF-8 BOM (`\\ufeff`) if present."""
+    return content[1:] if content.startswith("\ufeff") else content
+
+
+CRLFS = chr(13) + chr(10)
+CR_CH = chr(13)
+LF_CH = chr(10)
+
+
+def detect_newline(content: str) -> str:
+    """Detect whether `content` uses CRLF or LF."""
+    return CRLFS if CRLFS in content else LF_CH
 
 
 def sha256_hex(text: str) -> str:
@@ -84,7 +100,7 @@ class JsonKeyValueAdapter(StringTableAdapter):
     """Adapter for JSON string tables (either flat `{id: text}` or `{"strings": [...]}`)."""
 
     def read_records(self, content: str) -> list[StringRecord]:
-        data = json.loads(content)
+        data = json.loads(strip_bom(content))
         records: list[StringRecord] = []
         if isinstance(data, dict) and "strings" in data and isinstance(data["strings"], list):
             for row in data["strings"]:
@@ -105,7 +121,8 @@ class JsonKeyValueAdapter(StringTableAdapter):
         return records
 
     def write_records(self, original_content: str, translated_by_id: dict[str, str]) -> str:
-        data = json.loads(original_content)
+        nl = detect_newline(original_content)
+        data = json.loads(strip_bom(original_content))
         if isinstance(data, dict) and "strings" in data and isinstance(data["strings"], list):
             for row in data["strings"]:
                 rid = str(row["id"])
@@ -117,14 +134,15 @@ class JsonKeyValueAdapter(StringTableAdapter):
                     data[k] = translated_by_id[str(k)]
         else:
             raise ValueError("Unsupported JSON string table layout.")
-        return json.dumps(data, ensure_ascii=False, indent=2) + "\n"
+        dumped = json.dumps(data, ensure_ascii=False, indent=2) + LF_CH
+        return dumped.replace(LF_CH, nl) if nl == CRLFS else dumped
 
 
 class CsvTableAdapter(StringTableAdapter):
     """Adapter for CSV string tables with columns `id,text[,context_category,max_chars,max_lines]`."""
 
     def read_records(self, content: str) -> list[StringRecord]:
-        reader = csv.DictReader(io.StringIO(content))
+        reader = csv.DictReader(io.StringIO(strip_bom(content)))
         records: list[StringRecord] = []
         for row in reader:
             max_c = int(row["max_chars"]) if row.get("max_chars") else None
@@ -141,10 +159,11 @@ class CsvTableAdapter(StringTableAdapter):
         return records
 
     def write_records(self, original_content: str, translated_by_id: dict[str, str]) -> str:
-        reader = csv.DictReader(io.StringIO(original_content))
+        nl = detect_newline(original_content)
+        reader = csv.DictReader(io.StringIO(strip_bom(original_content)))
         fieldnames = list(reader.fieldnames or ["id", "text"])
         out_buf = io.StringIO()
-        writer = csv.DictWriter(out_buf, fieldnames=fieldnames, lineterminator="\n")
+        writer = csv.DictWriter(out_buf, fieldnames=fieldnames, lineterminator=nl)
         writer.writeheader()
         for row in reader:
             rid = str(row["id"])
@@ -155,38 +174,74 @@ class CsvTableAdapter(StringTableAdapter):
 
 
 class IniKeyValueAdapter(StringTableAdapter):
-    """Adapter for simple `KEY = VALUE` localization tables (preserving comments and sections)."""
+    """Adapter for `KEY = VALUE` localization tables (qualifying section IDs and escaping multiline)."""
 
+    SECTION_RE = re.compile(r"^\s*\[([^\]]+)\]\s*$")
     LINE_RE = re.compile(r"^(\s*([A-Za-z0-9_.-]+)\s*=\s*)(.*)$")
+
+    @staticmethod
+    def _qualify(section: str, key: str) -> str:
+        return f"{section}.{key}" if section else key
+
+    @staticmethod
+    def _unescape_ini_value(val: str) -> str:
+        bs_r_n = chr(92) + "r" + chr(92) + "n"
+        bs_n = chr(92) + "n"
+        return val.replace(bs_r_n, LF_CH).replace(bs_n, LF_CH)
+
+    @staticmethod
+    def _escape_ini_value(val: str) -> str:
+        bs_n = chr(92) + "n"
+        return val.replace(CRLFS, bs_n).replace(CR_CH, bs_n).replace(LF_CH, bs_n)
 
     def read_records(self, content: str) -> list[StringRecord]:
         records: list[StringRecord] = []
-        for raw_line in content.splitlines():
+        current_section = ""
+        for raw_line in strip_bom(content).splitlines():
             stripped = raw_line.strip()
-            if not stripped or stripped.startswith(("#", ";", "[")):
+            if not stripped or stripped.startswith(("#", ";")):
+                continue
+            sec_m = self.SECTION_RE.match(raw_line)
+            if sec_m:
+                current_section = sec_m.group(1).strip()
                 continue
             m = self.LINE_RE.match(raw_line)
             if m:
                 key = m.group(2)
-                val = m.group(3).strip()
-                records.append(StringRecord(id=key, text=val))
+                val = self._unescape_ini_value(m.group(3).strip())
+                records.append(StringRecord(id=self._qualify(current_section, key), text=val))
         return records
 
     def write_records(self, original_content: str, translated_by_id: dict[str, str]) -> str:
+        nl = detect_newline(original_content)
+        cleaned = strip_bom(original_content)
         out_lines: list[str] = []
-        for raw_line in original_content.splitlines():
+        current_section = ""
+        for raw_line in cleaned.splitlines():
             stripped = raw_line.strip()
-            if not stripped or stripped.startswith(("#", ";", "[")):
+            if not stripped or stripped.startswith(("#", ";")):
+                out_lines.append(raw_line)
+                continue
+            sec_m = self.SECTION_RE.match(raw_line)
+            if sec_m:
+                current_section = sec_m.group(1).strip()
                 out_lines.append(raw_line)
                 continue
             m = self.LINE_RE.match(raw_line)
-            if m and m.group(2) in translated_by_id:
+            if m:
                 prefix = m.group(1)
-                key = m.group(2)
-                out_lines.append(f"{prefix}{translated_by_id[key]}")
+                bare_key = m.group(2)
+                qualified_key = self._qualify(current_section, bare_key)
+                replacement = translated_by_id.get(qualified_key)
+                if replacement is None and bare_key in translated_by_id:
+                    replacement = translated_by_id[bare_key]
+                if replacement is not None:
+                    out_lines.append(f"{prefix}{self._escape_ini_value(replacement)}")
+                else:
+                    out_lines.append(raw_line)
             else:
                 out_lines.append(raw_line)
-        return "\n".join(out_lines) + "\n"
+        return nl.join(out_lines) + nl
 
 
 ADAPTERS: dict[str, type[StringTableAdapter]] = {
@@ -254,6 +309,7 @@ def inject_patch(
     adapter: StringTableAdapter,
     verify_hashes: bool = True,
     apply_shaping: bool = False,
+    apply_visual_order: bool = False,
     apply_bidi_isolate: bool = False,
 ) -> tuple[str, int]:
     """Inject Arabic translations from patch_data into original_content.
@@ -261,16 +317,24 @@ def inject_patch(
     Returns (updated_content, applied_count).
     """
     records_by_id = {r.id: r for r in adapter.read_records(original_content)}
+    # Also support bare keys for backward compatibility when unique
+    bare_to_qualified: dict[str, str] = {}
+    for qid in records_by_id:
+        if "." in qid:
+            bare = qid.split(".", 1)[1]
+            bare_to_qualified.setdefault(bare, qid)
+
     translated_by_id: dict[str, str] = {}
 
     for entry in patch_data.get("entries", []):
         eid = str(entry["id"])
-        if eid not in records_by_id:
+        target_id = eid if eid in records_by_id else bare_to_qualified.get(eid)
+        if not target_id or target_id not in records_by_id:
             continue
 
         expected_hash = entry.get("source_hash")
         if verify_hashes and expected_hash:
-            actual_hash = sha256_hex(records_by_id[eid].text)
+            actual_hash = sha256_hex(records_by_id[target_id].text)
             if actual_hash.lower() != str(expected_hash).lower():
                 raise ValueError(
                     f"Source hash mismatch for '{eid}': expected {expected_hash}, "
@@ -280,10 +344,12 @@ def inject_patch(
         ar_text = normalize_numerals(str(entry["ar"]))
         if apply_shaping:
             ar_text = shape_arabic_text(ar_text)
+        if apply_visual_order:
+            ar_text = "\n".join(visual_reorder_line(line) for line in ar_text.splitlines())
         if apply_bidi_isolate:
             ar_text = isolate_bidi_tokens(ar_text)
 
-        translated_by_id[eid] = ar_text
+        translated_by_id[target_id] = ar_text
 
     updated = adapter.write_records(original_content, translated_by_id)
     return updated, len(translated_by_id)
@@ -442,7 +508,12 @@ def main(argv: list[str] | None = None) -> int:
     p_inj.add_argument("--output", required=True, type=Path, help="Output patched file.")
     p_inj.add_argument("--adapter", default="auto", choices=["auto", "json", "csv", "ini"])
     p_inj.add_argument("--no-verify-hash", action="store_true", help="Skip SHA-256 hash check.")
-    p_inj.add_argument("--shape", action="store_true", help="Apply Arabic presentation shaping.")
+    p_inj.add_argument("--shape", action="store_true", help="Apply Arabic presentation shaping (logical order).")
+    p_inj.add_argument(
+        "--visual-order",
+        action="store_true",
+        help="Reverse shaped Arabic into visual LTR order for legacy engines without BiDi.",
+    )
     p_inj.add_argument(
         "--bidi-isolate",
         action="store_true",
@@ -459,7 +530,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "extract":
             adapter = resolve_adapter(args.adapter, args.input)
-            content = args.input.read_text(encoding="utf-8")
+            content = args.input.read_text(encoding="utf-8-sig")
             batch_doc = extract_to_batch(
                 source_content=content,
                 adapter=adapter,
@@ -477,23 +548,25 @@ def main(argv: list[str] | None = None) -> int:
 
         if args.command == "inject":
             adapter = resolve_adapter(args.adapter, args.source)
-            src_content = args.source.read_text(encoding="utf-8")
-            patch_doc = json.loads(args.patch.read_text(encoding="utf-8"))
+            raw_bytes = args.source.read_bytes()
+            src_content = raw_bytes.decode("utf-8-sig")
+            patch_doc = json.loads(args.patch.read_text(encoding="utf-8-sig"))
             updated, count = inject_patch(
                 original_content=src_content,
                 patch_data=patch_doc,
                 adapter=adapter,
                 verify_hashes=not args.no_verify_hash,
                 apply_shaping=args.shape,
+                apply_visual_order=args.visual_order,
                 apply_bidi_isolate=args.bidi_isolate,
             )
             args.output.parent.mkdir(parents=True, exist_ok=True)
-            args.output.write_text(updated, encoding="utf-8")
+            args.output.write_bytes(updated.encode("utf-8"))
             print(f"[OK] Injected {count} Arabic strings into '{args.output}'.")
             return 0
 
         if args.command == "preview":
-            patch_doc = json.loads(args.patch.read_text(encoding="utf-8"))
+            patch_doc = json.loads(args.patch.read_text(encoding="utf-8-sig"))
             html_out = render_rtl_preview_html(patch_doc)
             args.output.parent.mkdir(parents=True, exist_ok=True)
             args.output.write_text(html_out, encoding="utf-8")
