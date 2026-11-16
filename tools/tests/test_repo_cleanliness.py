@@ -31,12 +31,32 @@ class RepoCleanlinessTests(unittest.TestCase):
             tmp_root = Path(tmp)
             (tmp_root / ".gitignore").write_text("*.rpf\n", encoding="utf-8")
             (tmp_root / "archive.rpf").write_bytes(b"dummy")
-            (tmp_root / ".env").write_text("GEMINI_API_KEY=secret123\n", encoding="utf-8")
+            (tmp_root / "bundle.apk").write_bytes(b"dummy")
+            (tmp_root / ".env").write_text("GEMINI_API_KEY=" + "secret123\n", encoding="utf-8")
+            (tmp_root / "leak.txt").write_text(
+                "sk-proj-" + "AbCdEfGhIjKlMnOpQrStUvWxYz123456\n"
+                "sk_" + "0123456789abcdef0123456789abcdef01234567\n",
+                encoding="utf-8",
+            )
 
             issues = scan_repository(tmp_root)
             categories = {i.category for i in issues}
             self.assertIn("forbidden-game-or-binary-asset", categories)
             self.assertIn("forbidden-env-file", categories)
+            self.assertIn("secret-leak (openai-api-key)", categories)
+            self.assertIn("secret-leak (elevenlabs-api-key)", categories)
+
+    def test_gitignored_local_env_is_not_flagged_in_git_repo(self) -> None:
+        local_env = ROOT / ".env"
+        existed = local_env.exists()
+        try:
+            if not existed:
+                local_env.write_text("GEMINI_API_KEY=" + "local_ignored_key_for_test\n", encoding="utf-8")
+            issues = scan_repository(ROOT)
+            self.assertEqual(issues, [])
+        finally:
+            if not existed and local_env.exists():
+                local_env.unlink()
 
 
 if __name__ == "__main__":

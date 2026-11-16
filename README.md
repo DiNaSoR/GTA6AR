@@ -40,7 +40,7 @@
 
 ## المساهمون
 
-- **عمر (Omar 🪽):** [x.com/omx0r](https://x.com/omx0r) — تأسيس خطوط أنابيب الترجمة والدبلجة والصور، وبناء أدوات الاستخراج والحقن ودعم RTL وفحوصات الجودة.
+- **عمر (Omar 🪽):** [x.com/omx0r](https://x.com/omx0r) — توثيق هيكل المستودع وخط الإنتاج، ودليل التثبيت وفحص الجودة، وأداة التحقق الآلي من نظافة المستودع، والأداة الموحدة (`gta6ar.py`) وبوابة الفحص الآلي (CI).
 
 ## المشاركة
 
@@ -69,7 +69,7 @@
 Led by **(ص)**: [x.com/sbalhatlani](https://x.com/sbalhatlani)
 
 Contributors:
-- **Omar 🪽 (عمر):** [x.com/omx0r](https://x.com/omx0r) — AI translation, voice & image pipelines, extractor/injector CLI, RTL shaping, and QA tooling.
+- **Omar 🪽 (عمر):** [x.com/omx0r](https://x.com/omx0r) — Repository architecture & pipeline specification, installation & QA guide, automated repository cleanliness gate, unified CLI (`gta6ar.py`), and CI quality workflow.
 
 Anyone in the community can contribute by running the AI pipelines, building tools, and reporting bugs. See [CONTRIBUTING.md](CONTRIBUTING.md).
 

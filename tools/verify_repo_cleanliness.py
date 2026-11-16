@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -26,6 +27,7 @@ FORBIDDEN_EXTENSIONS = frozenset(
         ".cue",
         ".img",
         ".pak",
+        ".arc",
         ".wem",
         ".bnk",
         ".awc",
@@ -44,6 +46,10 @@ FORBIDDEN_EXTENSIONS = frozenset(
         ".dll",
         ".so",
         ".dylib",
+        ".app",
+        ".ipa",
+        ".apk",
+        ".obb",
         ".psarc",
         ".usm",
         ".bik",
@@ -78,7 +84,8 @@ SKIP_SCAN_DIRS = frozenset({".git", "__pycache__", ".venv", "venv", "node_module
 
 SECRET_PATTERNS = [
     ("google-api-key", re.compile(r"AIza[0-9A-Za-z\-_]{35}")),
-    ("openai-api-key", re.compile(r"sk-[A-Za-z0-9]{20,}")),
+    ("openai-api-key", re.compile(r"sk-[A-Za-z0-9\-_]{20,}")),
+    ("elevenlabs-api-key", re.compile(r"sk_[a-fA-F0-9]{32,}")),
     ("non-empty-env-key", re.compile(r"^(GEMINI_API_KEY|ELEVENLABS_API_KEY|OPENAI_API_KEY)[ \t]*=[ \t]*[^\s#]+", re.MULTILINE)),
 ]
 
@@ -88,6 +95,30 @@ class CleanlinessIssue:
     path: str
     category: str
     detail: str
+
+
+def _iter_candidate_files(root: Path) -> list[Path]:
+    """Return tracked/unignored files under `root` via `git ls-files`, falling back to `rglob`."""
+    if (root / ".git").exists():
+        try:
+            proc = subprocess.run(
+                ["git", "-C", str(root), "ls-files", "--cached", "--others", "--exclude-standard"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            paths: list[Path] = []
+            for rel_line in proc.stdout.splitlines():
+                rel_line = rel_line.strip()
+                if not rel_line:
+                    continue
+                candidate = root / rel_line
+                if candidate.exists():
+                    paths.append(candidate)
+            return paths
+        except (subprocess.SubprocessError, OSError):
+            pass
+    return list(root.rglob("*"))
 
 
 def scan_repository(root: Path) -> list[CleanlinessIssue]:
@@ -104,20 +135,27 @@ def scan_repository(root: Path) -> list[CleanlinessIssue]:
             )
         )
 
-    for item in root.rglob("*"):
+    reported_dirs: set[str] = set()
+    for item in _iter_candidate_files(root):
         rel_parts = item.relative_to(root).parts
         if any(part in SKIP_SCAN_DIRS for part in rel_parts):
             continue
 
-        if item.is_dir():
-            if item.name.lower() in FORBIDDEN_DIRS:
-                issues.append(
-                    CleanlinessIssue(
-                        path=item.relative_to(root).as_posix(),
-                        category="forbidden-directory",
-                        detail=f"Directory '{item.name}' is prohibited (game/secrets dir).",
+        # Check whether any parent directory component is in FORBIDDEN_DIRS
+        for idx, part in enumerate(rel_parts[:-1] if item.is_file() else rel_parts):
+            if part.lower() in FORBIDDEN_DIRS:
+                dir_rel = "/".join(rel_parts[: idx + 1])
+                if dir_rel not in reported_dirs:
+                    reported_dirs.add(dir_rel)
+                    issues.append(
+                        CleanlinessIssue(
+                            path=dir_rel,
+                            category="forbidden-directory",
+                            detail=f"Directory '{part}' is prohibited (game/secrets dir).",
+                        )
                     )
-                )
+
+        if item.is_dir():
             continue
 
         rel_posix = item.relative_to(root).as_posix()
