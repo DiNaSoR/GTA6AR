@@ -1,0 +1,25 @@
+{
+  "batch_id": "dummy-signs-001",
+  "items": [
+    {
+      "id": "DUMMY_IMG_SIGN_EXIT",
+      "category_id": "cat.road_and_transit_signs",
+      "arabic_text": "مخرج الطوارئ — 200 م",
+      "font_family": "Cairo",
+      "font_size_px": 36,
+      "contrast_ratio": 8.2,
+      "direction": "RTL",
+      "prompt_description": "Clean highway exit sign with white Arabic text on emerald green background."
+    },
+    {
+      "id": "DUMMY_IMG_STORE_CAFE",
+      "category_id": "cat.storefronts_and_menus",
+      "arabic_text": "مقهى الشاطئ الشرقي",
+      "font_family": "IBM Plex Sans Arabic",
+      "font_size_px": 30,
+      "contrast_ratio": 5.6,
+      "direction": "RTL",
+      "prompt_description": "Art deco storefront neon sign in warm pastel tones with connected Arabic lettering."
+    }
+  ]
+}

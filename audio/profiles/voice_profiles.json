@@ -1,0 +1,68 @@
+{
+  "profiles_version": "1.0.0",
+  "register": "MSA-Fusha",
+  "minimum_model": "ElevenLabs v4",
+  "legal_note": "Original dramatic archetypes for AI synthesis only. Never clone copyrighted actor voices or reference official character trademarks.",
+  "profiles": [
+    {
+      "role_id": "role.lead_female_01",
+      "archetype_ar": "بطلة رئيسة — شابة حازمة",
+      "archetype_en": "Primary Female Lead — Determined & Sharp",
+      "age_range": "25-32",
+      "vocal_register": "mezzo-soprano",
+      "fusha_delivery": "فصحى معاصرة واضحة المخارج، سريعة البديهة دون تكلّف مسرحي.",
+      "chars_per_sec_baseline": 14.5,
+      "settings": {
+        "stability": 0.65,
+        "similarity_boost": 0.78,
+        "style": 0.35,
+        "speaking_rate": 1.0
+      }
+    },
+    {
+      "role_id": "role.lead_male_01",
+      "archetype_ar": "بطل رئيس — شاب متزن",
+      "archetype_en": "Primary Male Lead — Composed & Grounded",
+      "age_range": "28-36",
+      "vocal_register": "baritone",
+      "fusha_delivery": "نبرة عميقة هادئة تحت الضغط، فصحى سلسة بطبقة متزنة.",
+      "chars_per_sec_baseline": 14.0,
+      "settings": {
+        "stability": 0.7,
+        "similarity_boost": 0.8,
+        "style": 0.3,
+        "speaking_rate": 0.98
+      }
+    },
+    {
+      "role_id": "role.dispatcher_neutral",
+      "archetype_ar": "موجّه عمليات واتصالات لاسلكية",
+      "archetype_en": "Radio & Tactical Dispatcher",
+      "age_range": "30-45",
+      "vocal_register": "neutral-mid",
+      "fusha_delivery": "إلقاء إخباري عملياتي دقيق ومباشر ومختصر.",
+      "chars_per_sec_baseline": 15.5,
+      "settings": {
+        "stability": 0.82,
+        "similarity_boost": 0.75,
+        "style": 0.15,
+        "speaking_rate": 1.05
+      }
+    },
+    {
+      "role_id": "role.mentor_veteran",
+      "archetype_ar": "شخصية خبيرة متأنية",
+      "archetype_en": "Veteran Mentor Archetype",
+      "age_range": "50-62",
+      "vocal_register": "bass-baritone",
+      "fusha_delivery": "فصحى رصينة متأنية واضحة الوقفات.",
+      "chars_per_sec_baseline": 13.0,
+      "settings": {
+        "stability": 0.76,
+        "similarity_boost": 0.8,
+        "style": 0.25,
+        "speaking_rate": 0.92
+      }
+    }
+  ]
+}

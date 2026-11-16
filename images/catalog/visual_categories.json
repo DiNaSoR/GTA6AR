@@ -1,0 +1,57 @@
+{
+  "catalog_version": "1.0.0",
+  "minimum_model": "OpenAI Sunburn",
+  "standards": {
+    "min_contrast_ratio": 4.5,
+    "min_warning_sign_contrast_ratio": 7.0,
+    "min_font_size_px": 24,
+    "approved_fonts": [
+      "Cairo",
+      "IBM Plex Sans Arabic",
+      "Noto Sans Arabic"
+    ],
+    "direction": "RTL"
+  },
+  "categories": [
+    {
+      "category_id": "cat.hud_overlays",
+      "priority": "P0",
+      "ar_title": "شارات الواجهة وشاشات الحالة الرسومية",
+      "en_title": "HUD Overlays & Status Banners",
+      "localization_method": "text-patch-or-ai-redraw",
+      "pipeline": "images"
+    },
+    {
+      "category_id": "cat.road_and_transit_signs",
+      "priority": "P1",
+      "ar_title": "لافتات الطرق والملاحة والنقل العام",
+      "en_title": "Road, Highway & Transit Signage",
+      "localization_method": "ai-redraw-sunburn",
+      "pipeline": "images"
+    },
+    {
+      "category_id": "cat.storefronts_and_menus",
+      "priority": "P2",
+      "ar_title": "واجهات المتاجر وقوائم الأسعار المصوّرة",
+      "en_title": "Storefronts & Illustrated Menus",
+      "localization_method": "ai-redraw-sunburn",
+      "pipeline": "images"
+    },
+    {
+      "category_id": "cat.in_game_web_and_apps",
+      "priority": "P2",
+      "ar_title": "ملصقات التطبيقات والمواقع الافتراضية",
+      "en_title": "In-Game App Banners & Web Graphics",
+      "localization_method": "hybrid-text-and-ai-image",
+      "pipeline": "images"
+    },
+    {
+      "category_id": "cat.maps_and_guides",
+      "priority": "P3",
+      "ar_title": "الخرائط الإرشادية والمخططات الداخلية",
+      "en_title": "Wayfinding Maps & Directory Boards",
+      "localization_method": "ai-redraw-sunburn",
+      "pipeline": "images"
+    }
+  ]
+}
