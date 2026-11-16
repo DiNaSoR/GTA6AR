@@ -1,0 +1,265 @@
+{
+  "glossary_version": "1.0.0",
+  "language": "ar",
+  "register": "MSA-Fusha",
+  "description": "المسرد العربي الفصيح المعتمد لمشروع GTA6AR — يحتوي على مصطلحات عامة للواجهة واللعب فقط دون أي نصوص منسوخة من اللعبة.",
+  "rules": {
+    "numerals": "western-arabic-0-9",
+    "default_address": "masculine-singular-imperative",
+    "forbid_dialects": true
+  },
+  "terms": [
+    {
+      "id": "term.main_menu",
+      "source_en": "Main Menu",
+      "target_ar": "القائمة الرئيسة",
+      "alternatives_ar": ["القائمة الرئيسية"],
+      "forbidden_ar": ["المنيو", "القائمه الرئيسيه"],
+      "category": "ui",
+      "notes": "تُفضّل «القائمة الرئيسة» بالفصحى."
+    },
+    {
+      "id": "term.settings",
+      "source_en": "Settings",
+      "target_ar": "الإعدادات",
+      "alternatives_ar": ["إعدادات"],
+      "forbidden_ar": ["الضبط", "الاعدادات", "تظبيط"],
+      "category": "ui",
+      "notes": "تُستعمل في جميع قوائم النظام مع الحفاظ على همزة القطع."
+    },
+    {
+      "id": "term.start_game",
+      "source_en": "Start Game",
+      "target_ar": "بدء اللعبة",
+      "alternatives_ar": ["ابدأ اللعبة"],
+      "forbidden_ar": ["بداية الجيم", "العب الحين"],
+      "category": "ui",
+      "notes": "زر البدء في القائمة الرئيسة."
+    },
+    {
+      "id": "term.continue",
+      "source_en": "Continue",
+      "target_ar": "متابعة",
+      "alternatives_ar": ["استمرار"],
+      "forbidden_ar": ["كمّل", "تكملة"],
+      "category": "ui",
+      "notes": "لاستئناف آخر حفظ."
+    },
+    {
+      "id": "term.save_progress",
+      "source_en": "Save Progress",
+      "target_ar": "حفظ التقدّم",
+      "alternatives_ar": ["حفظ اللعبة", "حفظ"],
+      "forbidden_ar": ["تسييف", "خزن اللعبة"],
+      "category": "ui",
+      "notes": "لحفظ حالة اللعب."
+    },
+    {
+      "id": "term.load_game",
+      "source_en": "Load Game",
+      "target_ar": "تحميل اللعبة",
+      "alternatives_ar": ["تحميل الحفظ"],
+      "forbidden_ar": ["لود", "فتح التسييف"],
+      "category": "ui",
+      "notes": "لفتح ملف حفظ سابق."
+    },
+    {
+      "id": "term.exit_game",
+      "source_en": "Exit Game",
+      "target_ar": "الخروج من اللعبة",
+      "alternatives_ar": ["خروج", "إنهاء اللعبة"],
+      "forbidden_ar": ["اطلع", "قفّل اللعبة"],
+      "category": "ui",
+      "notes": "للخروج إلى سطح المكتب أو النظام."
+    },
+    {
+      "id": "term.confirm",
+      "source_en": "Confirm",
+      "target_ar": "تأكيد",
+      "alternatives_ar": ["موافق"],
+      "forbidden_ar": ["اوكي", "تمام"],
+      "category": "ui",
+      "notes": "لأزرار الحوار والتأكيد."
+    },
+    {
+      "id": "term.cancel",
+      "source_en": "Cancel",
+      "target_ar": "إلغاء",
+      "alternatives_ar": ["تراجع"],
+      "forbidden_ar": ["كنسل", "الغاء"],
+      "category": "ui",
+      "notes": "مع الالتزام بهمزة القطع في «إلغاء»."
+    },
+    {
+      "id": "term.pause_menu",
+      "source_en": "Pause",
+      "target_ar": "إيقاف مؤقت",
+      "alternatives_ar": ["توقف مؤقت"],
+      "forbidden_ar": ["بوز", "توقيف"],
+      "category": "ui",
+      "notes": "شاشة الإيقاف المؤقت."
+    },
+    {
+      "id": "term.controls",
+      "source_en": "Controls",
+      "target_ar": "عناصر التحكم",
+      "alternatives_ar": ["التحكم"],
+      "forbidden_ar": ["الزراير", "الكنترول"],
+      "category": "controls",
+      "notes": "قائمة تخصيص الأزرار والمفاتيح."
+    },
+    {
+      "id": "term.keybindings",
+      "source_en": "Keybindings",
+      "target_ar": "تخصيص المفاتيح",
+      "alternatives_ar": ["تعيين الأزرار"],
+      "forbidden_ar": ["ربط الزراير"],
+      "category": "controls",
+      "notes": "إعدادات لوحة المفاتيح ووحدة التحكم."
+    },
+    {
+      "id": "term.graphics",
+      "source_en": "Graphics",
+      "target_ar": "الرسوميات",
+      "alternatives_ar": ["إعدادات العرض"],
+      "forbidden_ar": ["الجرافيكس", "الكرافكس"],
+      "category": "graphics",
+      "notes": "قائمة إعدادات الرسوميات وجودة الصورة."
+    },
+    {
+      "id": "term.resolution",
+      "source_en": "Resolution",
+      "target_ar": "دقة العرض",
+      "alternatives_ar": ["الدقة"],
+      "forbidden_ar": ["الريزولوشن"],
+      "category": "graphics",
+      "notes": "أبعاد الشاشة بالبكسل."
+    },
+    {
+      "id": "term.frame_rate",
+      "source_en": "Frame Rate",
+      "target_ar": "معدل الإطارات",
+      "alternatives_ar": ["الإطارات في الثانية"],
+      "forbidden_ar": ["الفريمات", "سرعة الفريم"],
+      "category": "graphics",
+      "notes": "معدل تحديث الإطارات (FPS)."
+    },
+    {
+      "id": "term.vsync",
+      "source_en": "Vertical Sync",
+      "target_ar": "المزامنة الرأسية",
+      "alternatives_ar": ["مزامنة رأسية"],
+      "forbidden_ar": ["الفي سينك"],
+      "category": "graphics",
+      "notes": "لمنع تمزّق الصورة."
+    },
+    {
+      "id": "term.audio",
+      "source_en": "Audio",
+      "target_ar": "الصوت",
+      "alternatives_ar": ["الصوتيات"],
+      "forbidden_ar": ["الأوديو"],
+      "category": "audio",
+      "notes": "قائمة إعدادات الصوت والموسيقى."
+    },
+    {
+      "id": "term.subtitles",
+      "source_en": "Subtitles",
+      "target_ar": "الترجمة النصية",
+      "alternatives_ar": ["الترجمات الفرعية"],
+      "forbidden_ar": ["السبتايتل", "الكلام اللي تحت"],
+      "category": "audio",
+      "notes": "خيار إظهار نصوص الحوار أسفل الشاشة."
+    },
+    {
+      "id": "term.voice_volume",
+      "source_en": "Dialogue Volume",
+      "target_ar": "مستوى صوت الحوار",
+      "alternatives_ar": ["صوت الحوارات"],
+      "forbidden_ar": ["صوت الكلام"],
+      "category": "audio",
+      "notes": "شريط التحكم بصوت الشخصيات."
+    },
+    {
+      "id": "term.map",
+      "source_en": "Map",
+      "target_ar": "الخريطة",
+      "alternatives_ar": ["خريطة العالم"],
+      "forbidden_ar": ["الماب", "الخارطه"],
+      "category": "gameplay",
+      "notes": "شاشة الخريطة والملاحة."
+    },
+    {
+      "id": "term.waypoint",
+      "source_en": "Waypoint",
+      "target_ar": "نقطة العبور",
+      "alternatives_ar": ["الوجهة المحددة", "علامة الطريق"],
+      "forbidden_ar": ["الدبوس", "الويبوينت"],
+      "category": "gameplay",
+      "notes": "النقطة التي يحددها اللاعب على الخريطة."
+    },
+    {
+      "id": "term.objective",
+      "source_en": "Objective",
+      "target_ar": "الهدف",
+      "alternatives_ar": ["المطلوب"],
+      "forbidden_ar": ["الأوبجكتف"],
+      "category": "missions",
+      "notes": "الهدف الحالي داخل المهمة."
+    },
+    {
+      "id": "term.mission_passed",
+      "source_en": "Mission Passed",
+      "target_ar": "اكتملت المهمة",
+      "alternatives_ar": ["نجحت المهمة"],
+      "forbidden_ar": ["عدّيت المهمة", "المهمة خلصت"],
+      "category": "missions",
+      "notes": "إعلان إتمام المهمة بنجاح."
+    },
+    {
+      "id": "term.mission_failed",
+      "source_en": "Mission Failed",
+      "target_ar": "فشلت المهمة",
+      "alternatives_ar": ["أخفقت المهمة"],
+      "forbidden_ar": ["خسرت المهمة"],
+      "category": "missions",
+      "notes": "إعلان فشل المهمة."
+    },
+    {
+      "id": "term.wanted_level",
+      "source_en": "Wanted Level",
+      "target_ar": "مستوى الملاحقة",
+      "alternatives_ar": ["درجة المطاردة"],
+      "forbidden_ar": ["نجوم الشرطة", "الوانتد"],
+      "category": "gameplay",
+      "notes": "مستوى مطاردة الشرطة للاعب."
+    },
+    {
+      "id": "term.safehouse",
+      "source_en": "Safehouse",
+      "target_ar": "الملاذ الآمن",
+      "alternatives_ar": ["المقر الآمن"],
+      "forbidden_ar": ["البيت السيف"],
+      "category": "gameplay",
+      "notes": "مقر إقامة الشخصية لحفظ التقدم."
+    },
+    {
+      "id": "term.inventory",
+      "source_en": "Inventory",
+      "target_ar": "المقتنيات",
+      "alternatives_ar": ["الحقيبة", "المخزون"],
+      "forbidden_ar": ["الإنفنتوري", "الشنطة"],
+      "category": "gameplay",
+      "notes": "قائمة الأدوات والمقتنيات التي يحملها اللاعب."
+    },
+    {
+      "id": "term.checkpoint",
+      "source_en": "Checkpoint",
+      "target_ar": "نقطة حفظ مرحلية",
+      "alternatives_ar": ["نقطة تفتيش", "نقطة عبور"],
+      "forbidden_ar": ["تشيك بوينت"],
+      "category": "missions",
+      "notes": "تُستعمل «نقطة حفظ مرحلية» لتقدّم المهمة، و«نقطة عبور» في السباقات."
+    }
+  ]
+}
