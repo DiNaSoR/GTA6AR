@@ -1,110 +1,6 @@
 (() => {
-  const I18N = {
-    ar: {
-      "nav.goal": "الهدف",
-      "nav.progress": "التقدّم",
-      "nav.roadmap": "الطريق",
-      "nav.models": "النماذج",
-      "***REDACTED***": "المساهمون",
-      "nav.join": "المشاركة",
-      "hero.eyebrow": "مشروع مجتمعي مفتوح المصدر",
-      "hero.title": "تعريب جراند ثيفت أوتو 6",
-      "hero.pitch": "تعريبٌ عربيٌّ فصيحٌ للنصوص والدبلجة والصور، يُنجَز بالكامل بالذكاء الاصطناعي، من غير عمل بشري في الترجمة أو الأداء أو الرسم.",
-      "hero.meta": "صدور اللعبة في 19 نوفمبر 2026 · يقود المشروع (ص)",
-      "hero.repo": "المستودع على GitHub",
-      "goal.title": "الهدف",
-      "goal.body": "أن نوفر تعريبًا عربيًا فصيحًا متكاملًا لجراند ثيفت أوتو 6، يشمل النصوص والدبلجة والصور، ويُنجز بالكامل بالذكاء الاصطناعي وفق النماذج المعتمدة، ثم ننشر ترقيعًا وأدواتٍ مجانيةً مفتوحة المصدر تبلغ الإصدار 1.0 بعد صدور اللعبة، من غير أن نوزّع أيًّا من ملفات اللعبة الأصلية. يلزم اللاعبَ امتلاكُ نسخة قانونية.",
-      "progress.title": "ملخص التقدّم",
-      "progress.intro": "ما زال المشروع في مرحلة التخطيط، والنسب نقطة انطلاق قبل صدور اللعبة.",
-      "progress.overall": "الكلي",
-      "progress.milestones": "المعالم",
-      "progress.issues": "القضايا",
-      "roadmap.title": "خارطة الطريق",
-      "models.title": "النماذج المعتمدة",
-      "models.intro": "لا تُقبل مساهمة أُنتجت بنموذج أضعف من الحد الأدنى، ولا عمل بشري مباشر في الترجمة أو الصوت أو الرسم.",
-      "models.voice.kicker": "الدبلجة والأداء الصوتي",
-      "models.voice.body": "أو أقوى.",
-      "models.text.kicker": "الترجمة والنصوص",
-      "models.text.body": "أو أقوى.",
-      "models.image.kicker": "الصور والرسوم",
-      "models.image.body": "من OpenAI أو أفضل.",
-      "contrib.title": "القيادة والمساهمون",
-      "contrib.intro": "الرواد الذين أسسوا البنية التحتية وخطوط إنتاج الذكاء الاصطناعي وأدوات التعريب للمشروع.",
-      "contrib.lead.kicker": "قيادة المشروع",
-      "contrib.lead.body": "مؤسس وقائد مشروع GTA6AR، وإدارة الرؤية العامة وخارطة الطريق.",
-      "contrib.omar.kicker": "تأسيس خطوط الأنابيب والأدوات",
-      "contrib.omar.name": "عمر (Omar 🪽)",
-      "contrib.omar.body": "تأسيس خطوط أنابيب الترجمة والدبلجة والصور، وبناء أدوات الاستخراج والحقن ودعم RTL وفحوصات الجودة.",
-      "contrib.you.kicker": "المجتمع المفتوح",
-      "contrib.you.name": "انضم للمساهمين",
-      "contrib.you.body": "شغّل الأداة الموحدة python tools/gta6ar.py status وشارك في دفعات التعريب أو الفحص.",
-      "contrib.you.cta": "طلبات الدمج",
-      "join.title": "المشاركة",
-      "join.intro": "المشاركة متاحة لكل أفراد المجتمع. اذكر اسم النموذج وإصداره في كل مساهمة.",
-      "join.pipe.title": "تشغيل خطوط الإنتاج",
-      "join.pipe.body": "شغّل أنابيب الترجمة والدبلجة والصور بالنماذج المعتمدة.",
-      "join.tools.title": "تطوير الأدوات",
-      "join.tools.body": "ابنِ أدوات الترقيع والمعاينة، من غير رفع ملفات اللعبة.",
-      "join.bugs.title": "الإبلاغ عن الأخطاء",
-      "join.bugs.body": "افتح قضية واشرح الخلل، بلا إرفاق أصول اللعبة.",
-      "join.issues": "القضايا",
-      "join.guide": "دليل المساهمة",
-      "legal.title": "تنويه",
-      "legal.body": "هذا مشروع جماهيري غير رسمي، ولا صلة له بشركة Rockstar Games أو Take-Two Interactive، والعلامات التجارية ملكٌ لأصحابها. التعريب والدبلجة والكتابة والصور في هذا المشروع منتَجة كلها بالذكاء الاصطناعي. يقتصر التوزيع على الترقيعات والأدوات، ولا نوزّع ملفات اللعبة، ويلزم اللاعبَ امتلاكُ نسخة أصلية قانونية."
-    },
-    en: {
-      "nav.goal": "Goal",
-      "nav.progress": "Progress",
-      "nav.roadmap": "Roadmap",
-      "nav.models": "Models",
-      "***REDACTED***": "Contributors",
-      "nav.join": "Participate",
-      "hero.eyebrow": "A community open-source project",
-      "hero.title": "Arabic localization of Grand Theft Auto 6",
-      "hero.pitch": "A formal-Arabic localization of the text, voice, and images, produced entirely by AI, with no human translation, voice acting, or art.",
-      "hero.meta": "Game launches 19 November 2026 · Led by (ص)",
-      "hero.repo": "GitHub repository",
-      "goal.title": "Goal",
-      "goal.body": "Ship a complete, formal-Arabic localization of Grand Theft Auto 6 — text, voice, and images — produced entirely by AI with the approved models, then release a free and open-source v1.0 patch and tools after the game launches, without ever distributing original game files. Players need their own legal copy.",
-      "progress.title": "Progress",
-      "progress.intro": "The project is still in planning, and these percentages are the starting point before the game ships.",
-      "progress.overall": "Overall",
-      "progress.milestones": "Milestones",
-      "progress.issues": "Issues",
-      "roadmap.title": "Roadmap",
-      "models.title": "Approved models",
-      "models.intro": "Contributions made with a weaker model, or with direct human translation, voice, or art, are not accepted.",
-      "models.voice.kicker": "Voice dubbing",
-      "models.voice.body": "or stronger.",
-      "models.text.kicker": "Translation and text",
-      "models.text.body": "or stronger.",
-      "models.image.kicker": "Images and graphics",
-      "models.image.body": "from OpenAI, or better.",
-      "contrib.title": "Leadership & Contributors",
-      "contrib.intro": "Pioneers who built the core AI localization pipelines, RTL tooling, and quality gates.",
-      "contrib.lead.kicker": "Project Lead",
-      "contrib.lead.body": "Founder and lead of GTA6AR, overseeing vision, standards, and roadmap.",
-      "contrib.omar.kicker": "AI Pipelines & Core Tooling",
-      "contrib.omar.name": "Omar 🪽 (عمر)",
-      "contrib.omar.body": "AI translation, voice & image pipelines, extractor/injector CLI, RTL shaping, and QA tooling.",
-      "contrib.you.kicker": "Open Community",
-      "contrib.you.name": "Join Contributors",
-      "contrib.you.body": "Run the unified CLI `python tools/gta6ar.py status` and contribute batches or QA checks.",
-      "contrib.you.cta": "Pull Requests",
-      "join.title": "How to participate",
-      "join.intro": "Anyone in the community can help. Name the model and version in every contribution.",
-      "join.pipe.title": "Run the AI pipelines",
-      "join.pipe.body": "Run the translation, dubbing, and image pipelines with the approved models.",
-      "join.tools.title": "Build tools",
-      "join.tools.body": "Build patch and preview tools, and never upload game files.",
-      "join.bugs.title": "Report bugs",
-      "join.bugs.body": "Open an issue and describe the problem, without attaching game assets.",
-      "join.issues": "Issues",
-      "join.guide": "Contributing guide",
-      "legal.title": "Disclaimer",
-      "legal.body": "This is an unofficial fan project, not affiliated with Rockstar Games or Take-Two Interactive. Trademarks belong to their owners. All localization, dubbing, writing, and images are AI-generated. We distribute patches and tools only — never game files. You need your own legal copy."
-    }
-  };
+  const LANG_KEY = "gta6ar-lang";
+  const html = document.documentElement;
 
   const monthsAr = {
     1: "يناير", 2: "فبراير", 3: "مارس", 4: "أبريل", 5: "مايو", 6: "يونيو",
@@ -112,7 +8,7 @@
   };
 
   const state = {
-    lang: "ar",
+    lang: html.lang === "en" ? "en" : "ar",
     data: {
       overall: 0,
       areas: [
@@ -127,18 +23,19 @@
     }
   };
 
+  // Both languages are in the markup (data-l="ar" / data-l="en"); CSS shows
+  // the one matching <html lang>. This only flips the switch and remembers it.
   function applyLang() {
     const lang = state.lang;
-    const dict = I18N[lang];
-    document.documentElement.lang = lang;
-    document.documentElement.dir = lang === "en" ? "ltr" : "rtl";
-    document.querySelectorAll("[data-i18n]").forEach((el) => {
-      const key = el.getAttribute("data-i18n");
-      if (dict[key]) el.textContent = dict[key];
-    });
+    html.lang = lang;
+    html.dir = lang === "en" ? "ltr" : "rtl";
+    const title = html.getAttribute(`data-title-${lang}`);
+    if (title) document.title = title;
     const toggle = document.getElementById("lang-toggle");
-    toggle.textContent = lang === "en" ? "العربية" : "English";
-    toggle.setAttribute("aria-label", lang === "en" ? "التبديل إلى العربية" : "Switch to English");
+    if (toggle) {
+      toggle.textContent = lang === "en" ? "العربية" : "English";
+      toggle.setAttribute("aria-label", lang === "en" ? "التبديل إلى العربية" : "Switch to English");
+    }
     renderProgress();
     renderTimeline();
   }
@@ -156,19 +53,24 @@
     return `${d} ${monthsAr[m]} ${y}`;
   }
 
+  function setBar(fill, pct) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        fill.style.width = `${pct}%`;
+      });
+    });
+  }
+
   function renderProgress() {
     const list = document.getElementById("progress-list");
+    if (!list) return;
+    const overallLabel = state.lang === "en" ? "Overall" : "الكلي";
     const overall = Math.max(0, Math.min(100, Number(state.data.overall) || 0));
     document.getElementById("overall-value").textContent = `${overall}%`;
     const overallTrack = document.getElementById("overall-track");
     overallTrack.setAttribute("aria-valuenow", String(overall));
-    overallTrack.setAttribute("aria-label", `${I18N[state.lang]["progress.overall"]} ${overall}%`);
-    const overallFill = document.getElementById("overall-fill");
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        overallFill.style.width = `${overall}%`;
-      });
-    });
+    overallTrack.setAttribute("aria-label", `${overallLabel} ${overall}%`);
+    setBar(document.getElementById("overall-fill"), overall);
     list.innerHTML = "";
     state.data.areas.forEach((area) => {
       const pct = Math.max(0, Math.min(100, Number(area.percent) || 0));
@@ -181,29 +83,23 @@
         </div>
         <span class="pct"></span>
       `;
-      row.querySelector(".label").textContent = state.lang === "en" ? area.en : area.ar;
-      const bar = row.querySelector(".bar-fill");
+      const label = state.lang === "en" ? area.en : area.ar;
+      row.querySelector(".label").textContent = label;
       const track = row.querySelector(".bar-track");
       track.setAttribute("aria-valuenow", String(pct));
-      track.setAttribute("aria-label", `${row.querySelector(".label").textContent} ${pct}%`);
+      track.setAttribute("aria-label", `${label} ${pct}%`);
       row.querySelector(".pct").textContent = `${pct}%`;
       list.appendChild(row);
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          bar.style.width = `${pct}%`;
-        });
-      });
+      setBar(row.querySelector(".bar-fill"), pct);
     });
   }
 
   function renderTimeline() {
     const ol = document.getElementById("timeline");
-    const items = state.data.milestones || [];
+    if (!ol) return;
     ol.innerHTML = "";
-    items.forEach((ms) => {
+    (state.data.milestones || []).forEach((ms) => {
       const li = document.createElement("li");
-      const title = state.lang === "en" ? ms.en : ms.ar;
-      const sub = state.lang === "en" ? ms.ar : ms.en;
       li.innerHTML = `
         <span class="node" aria-hidden="true"></span>
         <div class="ms-card">
@@ -215,13 +111,14 @@
       li.querySelector(".when").textContent = formatDate(ms.due);
       const a = li.querySelector("a");
       a.href = ms.url;
-      a.textContent = title;
-      li.querySelector(".sub").textContent = sub;
+      a.textContent = state.lang === "en" ? ms.en : ms.ar;
+      li.querySelector(".sub").textContent = state.lang === "en" ? ms.ar : ms.en;
       ol.appendChild(li);
     });
   }
 
   async function loadProgress() {
+    if (!document.getElementById("progress-list")) return;
     try {
       const res = await fetch("progress.json", { cache: "no-store" });
       if (!res.ok) throw new Error("progress.json missing");
@@ -232,32 +129,53 @@
     } catch (err) {
       console.warn("Using built-in progress fallback.", err);
     }
-    applyLang();
+    renderProgress();
+    renderTimeline();
   }
 
-  document.getElementById("lang-toggle").addEventListener("click", () => {
-    state.lang = state.lang === "ar" ? "en" : "ar";
-    applyLang();
-  });
+  // Counts down to launch day in the visitor's own time zone, then steps aside.
+  function startCountdown() {
+    const box = document.getElementById("countdown");
+    if (!box) return;
+    const target = new Date(box.dataset.target).getTime();
+    const cells = {
+      days: box.querySelector("[data-unit='days']"),
+      hours: box.querySelector("[data-unit='hours']"),
+      minutes: box.querySelector("[data-unit='minutes']"),
+      seconds: box.querySelector("[data-unit='seconds']")
+    };
+    const before = document.getElementById("countdown-before");
+    const after = document.getElementById("countdown-after");
+    let timer = 0;
+    function tick() {
+      const left = target - Date.now();
+      if (!(left > 0)) {
+        box.hidden = true;
+        if (before) before.hidden = true;
+        if (after) after.hidden = false;
+        clearInterval(timer);
+        return;
+      }
+      const s = Math.floor(left / 1000);
+      cells.days.textContent = String(Math.floor(s / 86400));
+      cells.hours.textContent = String(Math.floor((s % 86400) / 3600)).padStart(2, "0");
+      cells.minutes.textContent = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
+      cells.seconds.textContent = String(s % 60).padStart(2, "0");
+    }
+    tick();
+    timer = setInterval(tick, 1000);
+  }
 
-  function watchSections() {
-    if (!("IntersectionObserver" in window)) return;
-    const links = new Map();
-    document.querySelectorAll(".nav-links a[href^='#']").forEach((a) => {
-      links.set(a.getAttribute("href").slice(1), a);
-    });
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        links.forEach((a, id) => a.classList.toggle("is-active", id === entry.target.id));
-      });
-    }, { rootMargin: "-45% 0px -50% 0px" });
-    links.forEach((_, id) => {
-      const section = document.getElementById(id);
-      if (section) observer.observe(section);
+  const toggle = document.getElementById("lang-toggle");
+  if (toggle) {
+    toggle.addEventListener("click", () => {
+      state.lang = state.lang === "ar" ? "en" : "ar";
+      try { localStorage.setItem(LANG_KEY, state.lang); } catch (err) { /* private mode */ }
+      applyLang();
     });
   }
 
+  applyLang();
   loadProgress();
-  watchSections();
+  startCountdown();
 })();

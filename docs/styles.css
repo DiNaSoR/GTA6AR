@@ -688,3 +688,546 @@ html[dir="ltr"] .bar-fill { background: var(--neon); }
   html { scroll-behavior: auto; }
   .bar-fill, .card, .btn, .timeline .ms-card { transition: none; }
 }
+
+/* =====================================================================
+   Site upgrade: language switch, page heads, story, characters, world
+   ===================================================================== */
+
+/* ---------- Language: both languages live in the markup ---------- */
+
+html[lang="ar"] [data-l="en"],
+html[lang="en"] [data-l="ar"] { display: none !important; }
+
+:root {
+  --sand: #fff1dc;
+  --ink: #05010a;
+  --frame: 8px;
+}
+
+.nav-links a[aria-current="page"] {
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 46, 196, 0.8);
+  background: rgba(255, 46, 196, 0.1);
+}
+
+h3 { font-weight: 400; }
+p { text-wrap: pretty; }
+
+/* ---------- Countdown (home hero) ---------- */
+
+.countdown {
+  display: inline-grid;
+  grid-auto-flow: column;
+  gap: clamp(0.5rem, 2vw, 1.1rem);
+  margin: 1.4rem auto 0;
+  direction: ltr;
+}
+.countdown-cell {
+  min-width: clamp(4rem, 12vw, 6.2rem);
+  padding: 0.6rem 0.4rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: var(--glass) padding-box, var(--edge) border-box;
+}
+.countdown-cell strong {
+  display: block;
+  font-family: var(--heading);
+  font-weight: 400;
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  text-shadow: 0 0 14px var(--pink), 0 0 34px rgba(255, 138, 31, 0.45);
+}
+.countdown-cell span { color: var(--muted); font-size: 0.9rem; font-weight: 600; }
+.countdown-note { margin: 0.7rem 0 0; color: #ead9ff; font-weight: 600; }
+.countdown[hidden] { display: none; }
+
+/* ---------- Page head (inner pages) ---------- */
+
+.page-head {
+  padding-block: clamp(2rem, 5vw, 3.5rem) clamp(1rem, 3vw, 2rem);
+}
+.page-title {
+  margin: 0;
+  font-family: var(--heading);
+  font-weight: 400;
+  font-size: clamp(2.8rem, 9vw, 6.5rem);
+  line-height: 1.15;
+  color: #fff;
+  text-shadow:
+    0 0 6px rgba(255, 255, 255, 0.3),
+    0 0 22px rgba(255, 46, 196, 0.8),
+    0 0 60px rgba(214, 60, 255, 0.45);
+}
+.page-lead {
+  max-width: 60ch;
+  margin: 0.8rem 0 0;
+  font-size: 1.2rem;
+  color: #e9dcf7;
+}
+.spoiler-note {
+  display: inline-block;
+  margin: 1.1rem 0 0;
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #c9f7ff;
+  background: rgba(63, 230, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(63, 230, 255, 0.35);
+}
+
+/* ---------- Story: sunset scene ---------- */
+
+.scene {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: clamp(22rem, 52vw, 34rem);
+  display: grid;
+  align-content: end;
+  padding: clamp(1.25rem, 4vw, 3rem);
+  --sun-x: 24%;
+  --horizon: 66%;
+  border-radius: 6px;
+  outline: var(--frame) solid var(--ink);
+  background:
+    linear-gradient(180deg, #1a0745 0, #5b148f calc(var(--horizon) * 0.4), #c2238f calc(var(--horizon) * 0.7), #ff5f6d calc(var(--horizon) * 0.88), #ffb347 var(--horizon), #0c4a6b var(--horizon), #060f24 100%);
+}
+/* The sun: slatted disc sitting on the horizon. */
+.scene::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: var(--sun-x);
+  top: var(--horizon);
+  width: clamp(12rem, 34vw, 24rem);
+  aspect-ratio: 1;
+  transform: translate(-50%, -62%);
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fff3b0 0%, #ffc15a 35%, #ff5fa2 78%, #d63cff 100%);
+  mask-image: linear-gradient(180deg, #000 0 46%, transparent 46% 48%, #000 48% 53%, transparent 53% 56.5%, #000 56.5% 60%, transparent 60%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0 46%, transparent 46% 48%, #000 48% 53%, transparent 53% 56.5%, #000 56.5% 60%, transparent 60%);
+  filter: drop-shadow(0 0 40px rgba(255, 138, 31, 0.7));
+}
+/* Water is opaque so the sun rises from behind the horizon; streaks fade away from it. */
+.scene::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: var(--horizon) 0 0 0;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(6, 3, 20, 0.85) 100%),
+    radial-gradient(45% 130% at var(--sun-x) 0%, transparent 15%, #0a3350 80%),
+    repeating-linear-gradient(180deg, rgba(255, 179, 71, 0.6) 0 2px, transparent 2px 13px),
+    linear-gradient(180deg, #0c4a6b, #07233f 55%, #060f24);
+}
+html[dir="ltr"] .scene { --sun-x: 76%; }
+.scene-copy {
+  max-width: 36rem;
+  padding: clamp(1rem, 3vw, 1.6rem);
+  border-radius: 6px;
+  background: rgba(8, 2, 15, 0.72);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.scene-copy .page-title { font-size: clamp(2.2rem, 5.2vw, 4rem); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .scene::before { animation: sunrise 1.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  @keyframes sunrise {
+    from { transform: translate(-50%, -20%); opacity: 0.2; }
+    to { transform: translate(-50%, -62%); opacity: 1; }
+  }
+}
+
+/* ---------- Facts ---------- */
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0;
+  margin: 0;
+  border-block: 1px solid rgba(255, 46, 196, 0.35);
+}
+.facts > div {
+  padding: 1.1rem 1.25rem;
+  border-inline-start: 1px solid var(--faint);
+}
+.facts > div:first-child { border-inline-start: 0; }
+.facts dt { color: #ff9be3; font-weight: 700; font-size: 0.92rem; }
+.facts dd {
+  margin: 0.15rem 0 0;
+  font-family: var(--heading);
+  font-size: 1.45rem;
+  line-height: 1.4;
+  color: #fff;
+}
+.facts dd small { display: block; font-family: var(--body); font-size: 0.9rem; color: var(--muted); }
+
+/* ---------- Prose ---------- */
+
+.prose { max-width: 66ch; }
+.prose p { margin: 0 0 1.1rem; font-size: 1.14rem; color: #e9dcf7; }
+.prose p:last-child { margin-bottom: 0; }
+.prose p:first-child { font-size: 1.32rem; color: #fff; }
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.needs { margin: 0; display: grid; gap: 0; }
+.needs > div {
+  display: grid;
+  grid-template-columns: minmax(8rem, 13rem) 1fr;
+  gap: 0.4rem 1.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--faint);
+}
+.needs > div:last-child { border-bottom: 1px solid var(--faint); }
+.needs dt { font-family: var(--heading); font-size: 1.35rem; line-height: 1.5; color: #fff; }
+.needs dd { margin: 0; color: var(--muted); }
+.needs dd bdi, .latin { font-family: var(--body); direction: ltr; unicode-bidi: isolate; }
+
+/* Static roadmap rows reuse the timeline; titles there are not links. */
+.timeline .ms-title { color: #fff; font-weight: 700; font-size: 1.08rem; }
+
+/* ---------- Mosaic: cover-art style panels ---------- */
+
+.mosaic {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--frame);
+  padding: var(--frame);
+  background: var(--ink);
+  border-radius: 6px;
+  box-shadow: 0 30px 80px -40px rgba(255, 46, 196, 0.55);
+}
+.tile {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  grid-column: span 2;
+  min-height: 29rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.25rem 1.3rem 1.3rem;
+  border-radius: 2px;
+  color: var(--text);
+  background-color: #1a0633;
+}
+.tile-lead { grid-column: span 3; min-height: 36rem; }
+.mosaic-3 .tile { min-height: 19rem; }
+
+/* Art sits in ::before, the reading fade in ::after. */
+.tile::before, .tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+.tile::after {
+  background: linear-gradient(180deg, transparent 22%, rgba(8, 2, 15, 0.72) 52%, rgba(8, 2, 15, 0.96) 100%);
+}
+.tile-name {
+  margin: 0;
+  font-family: var(--heading);
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  line-height: 1.2;
+  color: #fff;
+  text-shadow: 0 2px 0 var(--ink), 0 0 24px rgba(255, 46, 196, 0.55);
+}
+.tile-lead .tile-name { font-size: clamp(2.6rem, 6vw, 4.6rem); }
+.tile-latin {
+  margin: 0;
+  font-weight: 700;
+  color: var(--sand);
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: start;
+}
+html[dir="rtl"] .tile-latin { text-align: right; }
+.tile-role { margin: 0.5rem 0 0; font-weight: 700; color: #ffb3ea; }
+.tile-bio { margin: 0.45rem 0 0; color: #eadff5; font-size: 1rem; line-height: 1.75; }
+.tile-voice {
+  margin: 0.8rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  font-size: 0.93rem;
+  color: var(--muted);
+}
+.tile-voice b { color: #c9f7ff; font-weight: 700; }
+
+a.tile { text-decoration: none; transition: filter 0.2s ease; }
+a.tile:hover { color: var(--text); text-shadow: none; filter: brightness(1.15) saturate(1.1); }
+a.tile:focus-visible { outline-offset: -4px; }
+.tile-go { margin: 0.6rem 0 0; font-weight: 700; color: var(--cyan); }
+
+/* Jason: dusk over the Keys */
+.t-jason::before {
+  background:
+    radial-gradient(circle at 50% 43%, #fff3b0 0 7%, #ffc15a 7.2% 10%, transparent 10.3%),
+    linear-gradient(180deg, #24084f 0%, #8f1f8a 24%, #ff6a5c 38%, #ffc15a 44%, #0e5d78 44.3%, #072b46 70%, #060f24 100%);
+}
+/* Lucia: Vice City at night */
+.t-lucia::before {
+  background:
+    linear-gradient(#0a0318, #0a0318) 6% 46% / 9% 20% no-repeat,
+    linear-gradient(#0a0318, #0a0318) 17% 46% / 7% 30% no-repeat,
+    linear-gradient(#0a0318, #0a0318) 27% 46% / 11% 15% no-repeat,
+    linear-gradient(#0a0318, #0a0318) 42% 46% / 8% 36% no-repeat,
+    linear-gradient(#0a0318, #0a0318) 54% 46% / 12% 22% no-repeat,
+    linear-gradient(#0a0318, #0a0318) 70% 46% / 7% 32% no-repeat,
+    linear-gradient(#0a0318, #0a0318) 82% 46% / 10% 18% no-repeat,
+    linear-gradient(#0a0318, #0a0318) 96% 46% / 8% 26% no-repeat,
+    linear-gradient(180deg, #120640 0%, #4c1290 20%, #d62aa8 38%, #ff8a1f 46%, #0a0318 46.2%);
+}
+/* Cal: radio waves */
+.t-cal::before {
+  background:
+    repeating-radial-gradient(circle at 78% 22%, rgba(63, 230, 255, 0.55) 0 2px, transparent 2px 24px),
+    linear-gradient(160deg, #04283a, #0a0f2e 70%);
+}
+/* Boobie Ike: gold and velvet */
+.t-boobie::before {
+  background:
+    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.12) 0 2px, transparent 2px 22px),
+    linear-gradient(140deg, #ffd166 0%, #c9791a 30%, #5a1a6e 62%, #1a0633 100%);
+}
+/* Dre'Quan: a record */
+.t-drequan::before {
+  background:
+    radial-gradient(circle at 50% 30%, #ff2ec4 0 6%, #ff8a1f 6.2% 9%, transparent 9.3%),
+    repeating-radial-gradient(circle at 50% 30%, #0d0716 0 3px, #2a1746 3px 6px);
+}
+/* Real Dimez: halftone pop */
+.t-dimez::before {
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.5) 1.6px, transparent 2.2px) 0 0 / 15px 15px,
+    linear-gradient(150deg, #ff2ec4 0%, #ff5f6d 34%, #8b4dff 70%, #1a0633 100%);
+}
+/* Raul: vault dial */
+.t-raul::before {
+  background:
+    radial-gradient(circle at 50% 30%, #0b1630 0 12%, transparent 12.3%),
+    repeating-conic-gradient(from 0deg at 50% 30%, rgba(255, 255, 255, 0.5) 0 1.5deg, transparent 1.5deg 15deg),
+    radial-gradient(circle at 50% 30%, #5d7fb0 0 26%, #22365c 26.3% 34%, #0b1630 34.3%);
+}
+/* Brian: boat yard swell */
+.t-brian::before {
+  background:
+    repeating-radial-gradient(ellipse 120% 60% at 50% 118%, rgba(255, 193, 90, 0.5) 0 2px, transparent 2px 20px),
+    linear-gradient(180deg, #ff8a1f 0%, #c2238f 30%, #0e5d78 52%, #062338 100%);
+}
+
+/* ---------- Name tables ---------- */
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: var(--glass) padding-box, var(--edge) border-box;
+}
+.names { width: 100%; border-collapse: collapse; min-width: 30rem; }
+.names th, .names td {
+  padding: 0.75rem 1.1rem;
+  text-align: start;
+  border-bottom: 1px solid var(--faint);
+}
+.names tr:last-child td { border-bottom: 0; }
+.names th { color: #ff9be3; font-size: 0.92rem; font-weight: 700; }
+.names td:first-child { font-family: var(--heading); font-size: 1.3rem; color: #fff; }
+.names td.latin { color: var(--sand); font-weight: 600; }
+.names td:last-child { color: var(--muted); }
+
+/* ---------- World: postcards along a route ---------- */
+
+.route {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 4.5rem);
+  counter-reset: stop;
+}
+/* The road's dashed centre line. */
+.route::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 50%;
+  width: 4px;
+  margin-inline-start: -2px;
+  background: repeating-linear-gradient(180deg, #ffc15a 0 26px, transparent 26px 48px);
+  opacity: 0.55;
+}
+.stop {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(3rem, 8vw, 6rem);
+  align-items: center;
+  counter-increment: stop;
+}
+.stop::before {
+  content: counter(stop);
+  position: absolute;
+  z-index: 1;
+  inset-inline-start: 50%;
+  top: 50%;
+  width: 3rem;
+  height: 3rem;
+  margin: -1.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-family: var(--heading);
+  font-size: 1.35rem;
+  color: var(--ink);
+  background: #ffc15a;
+  box-shadow: 0 0 0 5px var(--bg), 0 0 24px rgba(255, 193, 90, 0.6);
+}
+.stop:nth-child(even) .postcard { order: 2; }
+
+.postcard {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  padding: 1rem;
+  text-align: center;
+  border: 10px solid var(--sand);
+  border-radius: 4px;
+  box-shadow: 0 24px 50px -22px rgba(0, 0, 0, 0.9), 0 0 40px -10px rgba(255, 46, 196, 0.35);
+  transform: rotate(-1.4deg);
+}
+.stop:nth-child(even) .postcard { transform: rotate(1.4deg); }
+.postcard-hello {
+  margin: 0;
+  font-weight: 700;
+  font-size: clamp(0.95rem, 2vw, 1.25rem);
+  color: var(--sand);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+}
+.postcard-name {
+  margin: 0;
+  font-family: var(--heading);
+  font-size: clamp(2.2rem, 6vw, 4.4rem);
+  line-height: 1.15;
+  color: #fff;
+  -webkit-text-stroke: 2px var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 4px 4px 0 var(--ink);
+}
+.stop-body h3 {
+  margin: 0;
+  font-family: var(--heading);
+  font-size: clamp(1.7rem, 3.4vw, 2.3rem);
+  line-height: 1.3;
+  color: #fff;
+}
+.stop-body .tile-latin { color: #ffc15a; }
+.stop-body p.stop-text { margin: 0.6rem 0 0; color: #e0d2f0; font-size: 1.08rem; }
+.stop-body p.stop-based { margin: 0.6rem 0 0; color: var(--muted); font-size: 0.95rem; }
+
+/* ---------- Sources ---------- */
+
+.sources { margin: 0; color: var(--muted); font-size: 0.95rem; max-width: 70ch; }
+.footer-note { flex-basis: 100%; margin: 0; font-size: 0.88rem; color: var(--muted); }
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 960px) {
+  .tile, .tile-lead { grid-column: span 3; }
+  .tile-lead { min-height: 28rem; }
+  .split { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .route::before { inset-inline-start: 1.5rem; }
+  .stop { grid-template-columns: 1fr; gap: 1.25rem; padding-inline-start: 4rem; }
+  .stop::before { inset-inline-start: 1.5rem; top: 1.5rem; }
+  .stop:nth-child(even) .postcard { order: 0; }
+  .needs > div { grid-template-columns: 1fr; }
+  .facts > div { border-inline-start: 0; border-top: 1px solid var(--faint); }
+  .facts > div:first-child { border-top: 0; }
+}
+@media (max-width: 620px) {
+  .tile, .tile-lead { grid-column: span 6; min-height: 22rem; }
+  .mosaic-3 .tile { min-height: 15rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  a.tile { transition: none; }
+}
+
+/* Names inside tiles and route stops are headings without the section underline. */
+.tile-name, .stop-body h2 { padding-bottom: 0; }
+.tile-name::after, .stop-body h2::after { content: none; }
+.stop-body h2 { font-size: clamp(1.7rem, 3.4vw, 2.3rem); text-shadow: none; }
+
+@media (max-width: 720px) {
+  .scene, html[dir="ltr"] .scene { --sun-x: 50%; }
+}
+
+/* Phones: keep the sunset visible above the headline, and give tile art its own band. */
+@media (max-width: 720px) {
+  .scene { --horizon: 10.5rem; padding-top: 12rem; min-height: 0; }
+}
+@media (max-width: 620px) {
+  .tile, .tile-lead { min-height: 0; padding-top: 11.5rem; }
+  .tile::before { inset: 0 0 auto 0; height: 13rem; }
+  .tile::after { background: linear-gradient(180deg, transparent 5rem, rgba(8, 2, 15, 0.9) 10.5rem, #08020f 13rem); }
+  .mosaic-3 .tile { min-height: 0; }
+}
+
+/* ---------- Photos and video ---------- */
+
+.postcard { margin: 0; background: #1a0633; }
+.postcard img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Darken the middle of the photo so the name stays readable. */
+.postcard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(75% 60% at 50% 50%, rgba(8, 2, 15, 0.55), rgba(8, 2, 15, 0.1) 80%);
+}
+.postcard-text { position: relative; z-index: 1; }
+
+.t-keys-photo::before { background: url("assets/places/keys.jpg") center / cover no-repeat; }
+
+.videos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--frame);
+  padding: var(--frame);
+  background: var(--ink);
+  border-radius: 6px;
+}
+.video { margin: 0; }
+.video iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 2px;
+  background: #000;
+}
+.video figcaption { padding: 0.55rem 0.4rem 0.3rem; color: var(--muted); font-weight: 600; font-size: 0.95rem; }
+.names td a { font-weight: 600; }
+
+@media (max-width: 720px) {
+  .videos { grid-template-columns: 1fr; }
+}

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-title-ar="GTA6AR — تعريب جراند ثيفت أوتو 6" data-title-en="GTA6AR — Arabic localization of Grand Theft Auto 6">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +7,7 @@
   <meta name="theme-color" content="#08020f">
   <meta name="description" content="GTA6AR — تعريب عربي فصيح لجراند ثيفت أوتو 6 بالذكاء الاصطناعي.">
   <title>GTA6AR — تعريب جراند ثيفت أوتو 6</title>
+  <script>try{if(localStorage.getItem("gta6ar-lang")==="en"){document.documentElement.lang="en";document.documentElement.dir="ltr"}}catch(e){}</script>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,14 +21,12 @@
 
   <header class="nav">
     <div class="container nav-inner">
-      <a class="brand" href="#top">GTA6AR</a>
-      <nav class="nav-links" aria-label="الأقسام">
-        <a href="#goal" data-i18n="nav.goal">الهدف</a>
-        <a href="#progress" data-i18n="nav.progress">التقدّم</a>
-        <a href="#roadmap" data-i18n="nav.roadmap">الطريق</a>
-        <a href="#models" data-i18n="nav.models">النماذج</a>
-        <a href="#contributors" data-i18n="***REDACTED***">المساهمون</a>
-        <a href="#join" data-i18n="nav.join">المشاركة</a>
+      <a class="brand" href="index.html">GTA6AR</a>
+      <nav class="nav-links" aria-label="Pages">
+        <a href="index.html" aria-current="page"><span data-l="ar">الرئيسية</span><span data-l="en" lang="en">Home</span></a>
+        <a href="story.html"><span data-l="ar">القصة</span><span data-l="en" lang="en">Story</span></a>
+        <a href="characters.html"><span data-l="ar">الشخصيات</span><span data-l="en" lang="en">Characters</span></a>
+        <a href="world.html"><span data-l="ar">العالم</span><span data-l="en" lang="en">World</span></a>
       </nav>
       <button type="button" class="lang-toggle" id="lang-toggle" aria-label="Switch to English">English</button>
     </div>
@@ -40,25 +39,57 @@
           <img src="assets/header.png" width="2172" height="724" alt="تعريب جراند ثيفت أوتو" fetchpriority="high">
         </figure>
         <div class="hero-copy">
-          <p class="eyebrow" data-i18n="hero.eyebrow">مشروع مجتمعي مفتوح المصدر</p>
-          <h1 class="hero-title" data-i18n="hero.title">تعريب جراند ثيفت أوتو 6</h1>
-          <p class="hero-pitch" data-i18n="hero.pitch">تعريبٌ عربيٌّ فصيحٌ للنصوص والدبلجة والصور، يُنجَز بالكامل بالذكاء الاصطناعي، من غير عمل بشري في الترجمة أو الأداء أو الرسم.</p>
-          <p class="hero-meta" data-i18n="hero.meta">صدور اللعبة في 19 نوفمبر 2026 · يقود المشروع (ص)</p>
-          <div class="actions">
-            <a class="btn btn-primary" href="https://github.com/DiNaSoR/GTA6AR" data-i18n="hero.repo">المستودع على GitHub</a>
-            <a class="btn btn-ghost" href="https://x.com/sbalhatlani">(ص)</a>
+          <h1 class="hero-title" data-l="ar">تعريب جراند ثيفت أوتو 6</h1><h1 class="hero-title" data-l="en" lang="en">Arabic localization of Grand Theft Auto 6</h1>
+          <p class="hero-pitch" data-l="ar">تعريبٌ عربيٌّ فصيحٌ للنصوص والدبلجة والصور، يُنجَز بالكامل بالذكاء الاصطناعي، من غير عمل بشري في الترجمة أو الأداء أو الرسم.</p><p class="hero-pitch" data-l="en" lang="en">A formal-Arabic localization of the text, voice, and images, produced entirely by AI, with no human translation, voice acting, or art.</p>
+          <div>
+            <div class="countdown" id="countdown" data-target="2026-11-19T00:00:00" role="timer">
+              <div class="countdown-cell"><strong data-unit="days">–</strong><span data-l="ar">يوم</span><span data-l="en" lang="en">days</span></div>
+              <div class="countdown-cell"><strong data-unit="hours">–</strong><span data-l="ar">ساعة</span><span data-l="en" lang="en">hours</span></div>
+              <div class="countdown-cell"><strong data-unit="minutes">–</strong><span data-l="ar">دقيقة</span><span data-l="en" lang="en">minutes</span></div>
+              <div class="countdown-cell"><strong data-unit="seconds">–</strong><span data-l="ar">ثانية</span><span data-l="en" lang="en">seconds</span></div>
+            </div>
           </div>
+          <p class="countdown-note" id="countdown-before"><span data-l="ar">حتى صدور اللعبة في 19 نوفمبر 2026</span><span data-l="en" lang="en">until the game launches on 19 November 2026</span></p>
+          <p class="countdown-note" id="countdown-after" hidden><span data-l="ar">صدرت اللعبة في 19 نوفمبر 2026، وبدأ العمل على التعريب.</span><span data-l="en" lang="en">The game launched on 19 November 2026, and localization work is under way.</span></p>
+          <div class="actions">
+            <a class="btn btn-primary" href="story.html"><span data-l="ar">اقرأ القصة</span><span data-l="en" lang="en">Read the story</span></a>
+            <a class="btn btn-ghost" href="https://github.com/DiNaSoR/GTA6AR"><span data-l="ar">المستودع على GitHub</span><span data-l="en" lang="en">GitHub repository</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="discover">
+      <div class="container">
+        <div class="section-head">
+          <h2 data-l="ar">تعرّف على اللعبة</h2><h2 data-l="en" lang="en">Get to know the game</h2>
+          <p class="lead" data-l="ar">ما نعرفه عن القصة والشخصيات والعالم قبل الصدور، وكيف نكتب أسماءها بالعربية.</p><p class="lead" data-l="en" lang="en">What we know about the story, cast and world before launch, and how we write their names in Arabic.</p>
+        </div>
+        <div class="mosaic mosaic-3">
+          <a class="tile t-jason" href="story.html">
+            <h3 class="tile-name" data-l="ar">القصة</h3><h3 class="tile-name" data-l="en" lang="en">Story</h3>
+            <p class="tile-bio" data-l="ar">سطو يفشل، ومؤامرة تمتد عبر ولاية كاملة.</p><p class="tile-bio" data-l="en" lang="en">A robbery goes wrong, and a conspiracy spans a whole state.</p>
+            <p class="tile-go"><span data-l="ar">اقرأ القصة</span><span data-l="en" lang="en">Read the story</span></p>
+          </a>
+          <a class="tile t-lucia" href="characters.html">
+            <h3 class="tile-name" data-l="ar">الشخصيات</h3><h3 class="tile-name" data-l="en" lang="en">Characters</h3>
+            <p class="tile-bio" data-l="ar">جيسون ولوسيا وستة ممن يدورون في فلكهما.</p><p class="tile-bio" data-l="en" lang="en">Jason, Lucia and six people in their orbit.</p>
+            <p class="tile-go"><span data-l="ar">تعرّف على الشخصيات</span><span data-l="en" lang="en">Meet the cast</span></p>
+          </a>
+          <a class="tile t-keys-photo" href="world.html">
+            <h3 class="tile-name" data-l="ar">العالم</h3><h3 class="tile-name" data-l="en" lang="en">World</h3>
+            <p class="tile-bio" data-l="ar">ست مناطق في ولاية ليونايدا، من الجزر إلى الجبل.</p><p class="tile-bio" data-l="en" lang="en">Six regions of Leonida, from the islands to the mountain.</p>
+            <p class="tile-go"><span data-l="ar">جُل في ليونايدا</span><span data-l="en" lang="en">Tour Leonida</span></p>
+          </a>
         </div>
       </div>
     </section>
 
     <section class="section" id="goal">
       <div class="container">
-        <div class="section-head">
-          <h2 data-i18n="goal.title">الهدف</h2>
-        </div>
+        <div class="section-head"><h2 data-l="ar">الهدف</h2><h2 data-l="en" lang="en">Goal</h2></div>
         <div class="panel panel-glow">
-          <p class="panel-text" data-i18n="goal.body">أن نوفر تعريبًا عربيًا فصيحًا متكاملًا لجراند ثيفت أوتو 6، يشمل النصوص والدبلجة والصور، ويُنجز بالكامل بالذكاء الاصطناعي وفق النماذج المعتمدة، ثم ننشر ترقيعًا وأدواتٍ مجانيةً مفتوحة المصدر تبلغ الإصدار 1.0 بعد صدور اللعبة، من غير أن نوزّع أيًّا من ملفات اللعبة الأصلية. يلزم اللاعبَ امتلاكُ نسخة قانونية.</p>
+          <p class="panel-text" data-l="ar">أن نوفر تعريبًا عربيًا فصيحًا متكاملًا لجراند ثيفت أوتو 6، يشمل النصوص والدبلجة والصور، ويُنجز بالكامل بالذكاء الاصطناعي وفق النماذج المعتمدة، ثم ننشر ترقيعًا وأدواتٍ مجانيةً مفتوحة المصدر تبلغ الإصدار 1.0 بعد صدور اللعبة، من غير أن نوزّع أيًّا من ملفات اللعبة الأصلية. يلزم اللاعبَ امتلاكُ نسخة قانونية.</p><p class="panel-text" data-l="en" lang="en">Ship a complete, formal-Arabic localization of Grand Theft Auto 6 — text, voice, and images — produced entirely by AI with the approved models, then release a free and open-source v1.0 patch and tools after the game launches, without ever distributing original game files. Players need their own legal copy.</p>
         </div>
       </div>
     </section>
@@ -66,12 +97,12 @@
     <section class="section" id="progress">
       <div class="container">
         <div class="section-head">
-          <h2 data-i18n="progress.title">ملخص التقدّم</h2>
-          <p class="lead" data-i18n="progress.intro">ما زال المشروع في مرحلة التخطيط، والنسب نقطة انطلاق قبل صدور اللعبة.</p>
+          <h2 data-l="ar">ملخص التقدّم</h2><h2 data-l="en" lang="en">Progress</h2>
+          <p class="lead" data-l="ar">ما زال المشروع في مرحلة التخطيط، والنسب نقطة انطلاق قبل صدور اللعبة.</p><p class="lead" data-l="en" lang="en">The project is still in planning, and these percentages are the starting point before the game ships.</p>
         </div>
         <div class="panel progress-panel">
           <div class="overall">
-            <span class="overall-label" data-i18n="progress.overall">الكلي</span>
+            <span class="overall-label"><span data-l="ar">الكلي</span><span data-l="en" lang="en">Overall</span></span>
             <strong class="overall-value" id="overall-value">0%</strong>
             <div class="bar-track overall-track" id="overall-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
               <div class="bar-fill" id="overall-fill"></div>
@@ -79,9 +110,8 @@
           </div>
           <div class="progress-list" id="progress-list"></div>
           <p class="panel-links">
-            <a href="https://github.com/DiNaSoR/GTA6AR/milestones" data-i18n="progress.milestones">المعالم</a>
-            <span aria-hidden="true">·</span>
-            <a href="https://github.com/DiNaSoR/GTA6AR/issues" data-i18n="progress.issues">القضايا</a>
+            <a href="https://github.com/DiNaSoR/GTA6AR/milestones"><span data-l="ar">المعالم</span><span data-l="en" lang="en">Milestones</span></a>
+            <a href="https://github.com/DiNaSoR/GTA6AR/issues"><span data-l="ar">القضايا</span><span data-l="en" lang="en">Issues</span></a>
           </p>
         </div>
       </div>
@@ -89,9 +119,7 @@
 
     <section class="section" id="roadmap">
       <div class="container">
-        <div class="section-head">
-          <h2 data-i18n="roadmap.title">خارطة الطريق</h2>
-        </div>
+        <div class="section-head"><h2 data-l="ar">خارطة الطريق</h2><h2 data-l="en" lang="en">Roadmap</h2></div>
         <ol class="timeline" id="timeline"></ol>
       </div>
     </section>
@@ -99,24 +127,24 @@
     <section class="section" id="models">
       <div class="container">
         <div class="section-head">
-          <h2 data-i18n="models.title">النماذج المعتمدة</h2>
-          <p class="lead" data-i18n="models.intro">لا تُقبل مساهمة أُنتجت بنموذج أضعف من الحد الأدنى، ولا عمل بشري مباشر في الترجمة أو الصوت أو الرسم.</p>
+          <h2 data-l="ar">النماذج المعتمدة</h2><h2 data-l="en" lang="en">Approved models</h2>
+          <p class="lead" data-l="ar">لا تُقبل مساهمة أُنتجت بنموذج أضعف من الحد الأدنى، ولا عمل بشري مباشر في الترجمة أو الصوت أو الرسم.</p><p class="lead" data-l="en" lang="en">Contributions made with a weaker model, or with direct human translation, voice, or art, are not accepted.</p>
         </div>
         <div class="cards">
           <article class="card">
-            <p class="card-kicker" data-i18n="models.voice.kicker">الدبلجة والأداء الصوتي</p>
+            <p class="card-kicker" data-l="ar">الدبلجة والأداء الصوتي</p><p class="card-kicker" data-l="en" lang="en">Voice dubbing</p>
             <h3>ElevenLabs v4</h3>
-            <p data-i18n="models.voice.body">أو أقوى.</p>
+            <p data-l="ar">أو أقوى.</p><p data-l="en" lang="en">or stronger.</p>
           </article>
           <article class="card">
-            <p class="card-kicker" data-i18n="models.text.kicker">الترجمة والنصوص</p>
+            <p class="card-kicker" data-l="ar">الترجمة والنصوص</p><p class="card-kicker" data-l="en" lang="en">Translation and text</p>
             <h3>Gemini 3.8 Flash</h3>
-            <p data-i18n="models.text.body">أو أقوى.</p>
+            <p data-l="ar">أو أقوى.</p><p data-l="en" lang="en">or stronger.</p>
           </article>
           <article class="card">
-            <p class="card-kicker" data-i18n="models.image.kicker">الصور والرسوم</p>
+            <p class="card-kicker" data-l="ar">الصور والرسوم</p><p class="card-kicker" data-l="en" lang="en">Images and graphics</p>
             <h3>Sunburn</h3>
-            <p data-i18n="models.image.body">من OpenAI أو أفضل.</p>
+            <p data-l="ar">من OpenAI أو أفضل.</p><p data-l="en" lang="en">from OpenAI, or better.</p>
           </article>
         </div>
       </div>
@@ -160,40 +188,35 @@
     <section class="section" id="join">
       <div class="container">
         <div class="section-head">
-          <h2 data-i18n="join.title">المشاركة</h2>
-          <p class="lead" data-i18n="join.intro">المشاركة متاحة لكل أفراد المجتمع. اذكر اسم النموذج وإصداره في كل مساهمة.</p>
+          <h2 data-l="ar">المشاركة</h2><h2 data-l="en" lang="en">How to participate</h2>
+          <p class="lead" data-l="ar">المشاركة متاحة لكل أفراد المجتمع. اذكر اسم النموذج وإصداره في كل مساهمة.</p><p class="lead" data-l="en" lang="en">Anyone in the community can help. Name the model and version in every contribution.</p>
         </div>
         <div class="cards">
           <article class="card">
-            <span class="card-index" aria-hidden="true">01</span>
-            <h3 data-i18n="join.pipe.title">تشغيل خطوط الإنتاج</h3>
-            <p data-i18n="join.pipe.body">شغّل أنابيب الترجمة والدبلجة والصور بالنماذج المعتمدة.</p>
+            <h3 data-l="ar">تشغيل خطوط الإنتاج</h3><h3 data-l="en" lang="en">Run the AI pipelines</h3>
+            <p data-l="ar">شغّل أنابيب الترجمة والدبلجة والصور بالنماذج المعتمدة.</p><p data-l="en" lang="en">Run the translation, dubbing, and image pipelines with the approved models.</p>
           </article>
           <article class="card">
-            <span class="card-index" aria-hidden="true">02</span>
-            <h3 data-i18n="join.tools.title">تطوير الأدوات</h3>
-            <p data-i18n="join.tools.body">ابنِ أدوات الترقيع والمعاينة، من غير رفع ملفات اللعبة.</p>
+            <h3 data-l="ar">تطوير الأدوات</h3><h3 data-l="en" lang="en">Build tools</h3>
+            <p data-l="ar">ابنِ أدوات الترقيع والمعاينة، من غير رفع ملفات اللعبة.</p><p data-l="en" lang="en">Build patch and preview tools, and never upload game files.</p>
           </article>
           <article class="card">
-            <span class="card-index" aria-hidden="true">03</span>
-            <h3 data-i18n="join.bugs.title">الإبلاغ عن الأخطاء</h3>
-            <p data-i18n="join.bugs.body">افتح قضية واشرح الخلل، بلا إرفاق أصول اللعبة.</p>
+            <h3 data-l="ar">الإبلاغ عن الأخطاء</h3><h3 data-l="en" lang="en">Report bugs</h3>
+            <p data-l="ar">افتح قضية واشرح الخلل، بلا إرفاق أصول اللعبة.</p><p data-l="en" lang="en">Open an issue and describe the problem, without attaching game assets.</p>
           </article>
         </div>
         <div class="actions actions-start">
-          <a class="btn btn-primary" href="https://github.com/DiNaSoR/GTA6AR/issues" data-i18n="join.issues">القضايا</a>
-          <a class="btn btn-ghost" href="https://github.com/DiNaSoR/GTA6AR/blob/main/CONTRIBUTING.md" data-i18n="join.guide">دليل المساهمة</a>
+          <a class="btn btn-primary" href="https://github.com/DiNaSoR/GTA6AR/issues"><span data-l="ar">افتح قضية</span><span data-l="en" lang="en">Open an issue</span></a>
+          <a class="btn btn-ghost" href="https://github.com/DiNaSoR/GTA6AR/blob/main/CONTRIBUTING.md"><span data-l="ar">دليل المساهمة</span><span data-l="en" lang="en">Contributing guide</span></a>
         </div>
       </div>
     </section>
 
     <section class="section" id="disclaimer">
       <div class="container">
-        <div class="section-head">
-          <h2 data-i18n="legal.title">تنويه</h2>
-        </div>
+        <div class="section-head"><h2 data-l="ar">تنويه</h2><h2 data-l="en" lang="en">Disclaimer</h2></div>
         <div class="panel panel-quiet">
-          <p class="panel-text" data-i18n="legal.body">هذا مشروع جماهيري غير رسمي، ولا صلة له بشركة Rockstar Games أو Take-Two Interactive، والعلامات التجارية ملكٌ لأصحابها. التعريب والدبلجة والكتابة والصور في هذا المشروع منتَجة كلها بالذكاء الاصطناعي. يقتصر التوزيع على الترقيعات والأدوات، ولا نوزّع ملفات اللعبة، ويلزم اللاعبَ امتلاكُ نسخة أصلية قانونية.</p>
+          <p class="panel-text" data-l="ar">هذا مشروع جماهيري غير رسمي، ولا صلة له بشركة Rockstar Games أو Take-Two Interactive، والعلامات التجارية ملكٌ لأصحابها. التعريب والدبلجة والكتابة والصور في هذا المشروع منتَجة كلها بالذكاء الاصطناعي. يقتصر التوزيع على الترقيعات والأدوات، ولا نوزّع ملفات اللعبة، ويلزم اللاعبَ امتلاكُ نسخة أصلية قانونية.</p><p class="panel-text" data-l="en" lang="en">This is an unofficial fan project, not affiliated with Rockstar Games or Take-Two Interactive. Trademarks belong to their owners. All localization, dubbing, writing, and images are AI-generated. We distribute patches and tools only — never game files. You need your own legal copy.</p>
         </div>
       </div>
     </section>
@@ -202,11 +225,12 @@
   <footer class="footer">
     <div class="container footer-inner">
       <span class="brand brand-small">GTA6AR</span>
-      <nav class="footer-links" aria-label="روابط">
+      <nav class="footer-links" aria-label="Links">
         <a href="https://github.com/DiNaSoR/GTA6AR">GitHub</a>
         <a href="https://x.com/sbalhatlani">(ص)</a>
         <a href="https://x.com/omx0r">Omar 🪽</a>
       </nav>
+      <p class="footer-note" data-l="ar">مشروع جماهيري غير رسمي، لا صلة له بشركة Rockstar Games أو Take-Two Interactive. أسماء اللعبة وشخصياتها وأماكنها علامات لأصحابها.</p><p class="footer-note" data-l="en" lang="en">An unofficial fan project, not affiliated with Rockstar Games or Take-Two Interactive. Game, character and place names belong to their owners.</p>
     </div>
   </footer>
 
