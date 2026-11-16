@@ -1,0 +1,42 @@
+name: CI Quality & Cleanliness Gate
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality-gate:
+    name: Verify Cleanliness, Unit Tests & CLI Pipelines
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify repository cleanliness (zero game files & zero secrets)
+        run: |
+          if [ -f tools/verify_repo_cleanliness.py ]; then
+            python tools/verify_repo_cleanliness.py
+          fi
+
+      - name: Run unit test suite
+        run: |
+          if [ -d tools/tests ]; then
+            python -m unittest discover -s tools/tests -v
+          fi
+
+      - name: Run unified CLI status check
+        run: |
+          if [ -f tools/gta6ar.py ]; then
+            python tools/gta6ar.py status
+          fi
