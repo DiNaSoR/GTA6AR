@@ -1,0 +1,25 @@
+{
+  "strings": [
+    {
+      "id": "DUMMY_MENU_TITLE",
+      "text": "Main Menu",
+      "context_category": "menu",
+      "max_chars": 25,
+      "max_lines": 1
+    },
+    {
+      "id": "DUMMY_HUD_SPEED",
+      "text": "Press ~INPUT_ACCEPT~ at 120 km/h to enter slot {0}.",
+      "context_category": "hud",
+      "max_chars": 65,
+      "max_lines": 2
+    },
+    {
+      "id": "DUMMY_SUB_LAM_ALEF",
+      "text": "No retreat now — protect the safe zone immediately.",
+      "context_category": "dialogue",
+      "max_chars": 55,
+      "max_lines": 2
+    }
+  ]
+}

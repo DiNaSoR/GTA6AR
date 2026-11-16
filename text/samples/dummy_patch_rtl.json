@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "domain": "ui",
+  "batch_id": "sample-rtl-shaping-001",
+  "generated_at": "2026-11-16T18:30:00Z",
+  "generator": {
+    "model_name": "gemini-3.8-flash",
+    "model_version": "3.8",
+    "pipeline_version": "1.0.0",
+    "glossary_version": "1.0.0"
+  },
+  "entries": [
+    {
+      "id": "DUMMY_MENU_TITLE",
+      "source_hash": "0630f7b309c71984a83d651fb02a0d3fc574c04a4f38451f3376926227f18b2d",
+      "ar": "القائمة الرئيسة",
+      "context_category": "menu",
+      "max_chars": 25,
+      "max_lines": 1
+    },
+    {
+      "id": "DUMMY_HUD_SPEED",
+      "source_hash": "9a7d56e78f3c5c00f15d9d1f11351748e1a661a24f4e373a4319d57860b67e5f",
+      "ar": "اضغط على ~INPUT_ACCEPT~ عند سرعة 120 كم/س لدخول الخانة {0}.",
+      "context_category": "hud",
+      "max_chars": 65,
+      "max_lines": 2
+    },
+    {
+      "id": "DUMMY_SUB_LAM_ALEF",
+      "source_hash": "b8c4bc606431e3994163e52c028a218b725120263f712f28588f10306332f55d",
+      "ar": "لا تتراجع الآن — احمِ المنطقة الآمنة فورًا.",
+      "context_category": "dialogue",
+      "max_chars": 55,
+      "max_lines": 2
+    }
+  ]
+}
